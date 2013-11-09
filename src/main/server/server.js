@@ -10,7 +10,7 @@ var app = express();
 
 // app configure
 app.use(express.compress());
-
+app.use(express.favicon('../webapp/favicon.ico'));
 app.use(express.errorHandler({
   dumpExceptions : true,
   showStack : true
