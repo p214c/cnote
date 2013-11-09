@@ -1,7 +1,7 @@
 var express = require('express');
 
 var exp = express();
-var notes = require('./js/routes/notes');
+var notes = require('./routes/notes');
 
 exp.get('/notes', notes.findAll);
 exp.get('/notes/:id', notes.findById);
