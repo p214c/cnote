@@ -1,6 +1,6 @@
 define([ 'jquery', 'views/MainView'], function($, MainView) {
 	var initialize = function() {
-		MainView.load();
+		MainView.init();
 	};
 
 	return {

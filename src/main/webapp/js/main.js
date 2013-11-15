@@ -7,13 +7,14 @@ require.config({
     // 'underscore': 'vendor/lodash',
 
     // plugins
-    bootstrap : 'vendor/bootstrap.min'
+    bootstrap : 'vendor/bootstrap.min',
+    text : 'vendor/text',
 
-  // application folders
-  // collections: 'app/collections',
-  // models: 'app/models',
-  // routers: 'app/routers',
-  // templates: 'app/templates',
+    // application folders
+    // collections: 'app/collections',
+    // models: 'app/models',
+    // routers: 'app/routers',
+    templates : '../templates'
   // views: 'app/views',
   // layouts: 'app/layouts',
   // configs: 'app/config'
@@ -33,7 +34,7 @@ require.config({
 
 });
 
-// load of bootstrap and the app 
+// load of bootstrap and the app
 require([ 'jquery', 'app', 'bootstrap' ], function($, App) {
-	App.initialize();
+  App.initialize();
 });
