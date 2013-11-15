@@ -33,6 +33,7 @@ require.config({
 
 });
 
-// force load of bootstrap
-require([ 'jquery', 'bootstrap' ], function($) {
+// load of bootstrap and the app 
+require([ 'jquery', 'bootstrap', 'app' ], function($) {
+	App.initialize();
 });
