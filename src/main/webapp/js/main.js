@@ -34,6 +34,6 @@ require.config({
 });
 
 // load of bootstrap and the app 
-require([ 'jquery', 'bootstrap', 'app' ], function($) {
+require([ 'jquery', 'app', 'bootstrap' ], function($, App) {
 	App.initialize();
 });

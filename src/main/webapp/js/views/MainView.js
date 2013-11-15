@@ -1,13 +1,12 @@
 define([ 'jquery' ], function($) {
-	var MainView = (function() {
+	function MainView() {
 
 		function load() {
-			debugger;
+			
 		}
 		this.load = load;
 
-		return new MainView();
-	});
+	}
 
-	return MainView;
+	return new MainView();
 });
