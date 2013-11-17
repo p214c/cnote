@@ -11,6 +11,7 @@ var app = express();
 // app configure
 app.use(express.compress());
 app.use(express.favicon('../webapp/favicon.ico'));
+app.use(express.bodyParser());
 app.use(express.errorHandler({
   dumpExceptions : true,
   showStack : true
@@ -24,6 +25,8 @@ app.use('/cnote', express.static(webapp_root), {
 // REST
 app.get('/notes', notes.findAll);
 app.get('/notes/:id', notes.findById);
+app.post('/notes', notes.add);
+app.put('/notes/:id', notes.update);
 
 app.listen(8080);
 console.log('Listening on port 8080...');
