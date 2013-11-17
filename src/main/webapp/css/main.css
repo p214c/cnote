@@ -27,3 +27,11 @@ html,body {
 	border-color: #022f5a;
 	color: #fff
 }
+
+.btn-store {
+	margin: 4px;
+}
+
+.btn-store:hover,.btn-store:focus,.btn-store.active {
+	border-color: rgba(0, 0, 0, 0.3);
+}
