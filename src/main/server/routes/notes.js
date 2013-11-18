@@ -21,6 +21,8 @@ var Note = function() {
     delete data.id;
     delete data.created;
     delete data['last-modified'];
+    
+    return data;
   }
 
   function getNotes() {
