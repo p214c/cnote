@@ -9,6 +9,22 @@ define(
     function(hdrContainer, hdrBar, hdrCollapse, contentContainer,
         contentRowItem, ftrContainer, NotePresenter) {
       function MainView() {
+        var me = this;
+        me.note = '';
+
+        function getData() {
+          return {
+            note : me.note,
+            value : $('#wysihtml5-textarea').val()
+          };
+        }
+
+        this.getData = getData;
+
+        function storeNote() {
+          // TODO pass content view
+          NotePresenter.storeNote(me);
+        }
 
         function addHeader(parent) {
           var $hdrContainer = $(hdrContainer);
@@ -18,6 +34,7 @@ define(
           $hdr.append(hdrCollapse);
         }
 
+        // TODO separate out to a content view
         function addContent(parent) {
           var $contentContainer = $(contentContainer);
           parent.append($contentContainer);
@@ -40,7 +57,7 @@ define(
           var $storeButton = $(btnHtml);
           $ftr.append($storeButton);
 
-          $storeButton.on('click', NotePresenter.storeNote);
+          $storeButton.on('click', storeNote);
         }
 
         function load() {
