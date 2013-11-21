@@ -11,6 +11,7 @@ define(
       function MainView() {
         var me = this;
         me.note = '';
+        var $editor;
 
         function getData() {
           return {
@@ -26,12 +27,40 @@ define(
           NotePresenter.storeNote(me);
         }
 
+        function loadNotesMenu(notesData) {
+          var $ul = $('.navbar-header ul');
+          for (var i = 0, len = notesData.length; i < len; i++) {
+            $li = $('<li data-note-id="' + notesData[i].id + '">'
+                + notesData[i].title + '</li>');
+            $ul.append($li);
+          }
+        }
+
+        function loadNote(note) {
+          me.note = note;
+          $editor.setValue(note.data, true);
+        }
+
         function addHeader(parent) {
           var $hdrContainer = $(hdrContainer);
           parent.append($hdrContainer);
           var $hdr = $hdrContainer.children('.header-container:first-child');
           $hdr.append(hdrBar);
           $hdr.append(hdrCollapse);
+
+          $('.navbar-header ul').delegate(
+              'li',
+              'click',
+              function(event) {
+                NotePresenter.getNote($(event.currentTarget).attr(
+                    'data-note-id'), false, {
+                  success : loadNote
+                });
+              });
+
+          NotePresenter.getNote('', true, {
+            success : loadNotesMenu
+          });
         }
 
         // TODO separate out to a content view
@@ -43,9 +72,11 @@ define(
           var $contentRowItem = $(contentRowItem);
           $content.append($contentRowItem);
 
-          $contentRowItem.children('textarea:first-child').wysihtml5({
+          var $ta = $contentRowItem.children('textarea:first-child');
+          $ta.wysihtml5({
             stylesheets : [ "css/wysiwyg-color.css" ]
           });
+          $editor = $ta.data('wysihtml5').editor;
         }
 
         function addFooter(parent) {

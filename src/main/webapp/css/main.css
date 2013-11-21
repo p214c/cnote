@@ -17,8 +17,9 @@ html,body {
 .content-row-item {
 	height: 100%;
 }
+
 .footer-container {
-/*
+	/*
 	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9ccefc),
 		color-stop(60%, #c4c1fd), to(#ebf5fe));
 	background-image: -webkit-linear-gradient(#9ccefc, #c4c1fd 60%, #ebf5fe);
@@ -48,10 +49,26 @@ html,body {
 .wysihtml5-sandbox {
 	width: 100% !important;
 	height: 100% !important;
-/*	background-color: #9ccefc !important; */
+	/*	background-color: #9ccefc !important; */
 	border-color-top: #022f5a !important;
 	border-bottom: none !important;
 	border-left: none !important;
 	border-right: none !important;
 	outline: none !important;
+}
+
+.navbar-header .btn:first-child {
+	margin-left: 4px !important;
+	color: #fff;
+	border-color: #022f5a;
+	background-color: transparent;
+}
+
+.navbar-header .btn:first-child:hover,.navbar-header .btn:first-child:focus,.navbar-header .btn:first-child:active
+	{
+	background-color: #022f5a !important;
+}
+
+.dropdown-menu li {
+	margin-left: 4px;
 }
