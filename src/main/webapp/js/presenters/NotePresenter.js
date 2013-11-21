@@ -38,11 +38,11 @@ define([ 'models/Note', 'jquery' ], function(Note) {
       }).fail(failure);
     }
 
-    function storeNote(view) {
+    function storeNote(view, callbacks) {
       var data = view.getData();
       var note = data.note || new Note();
       note.data = data.value;
-      store(note, view.callbacks);
+      store(note, callbacks);
     }
     this.storeNote = storeNote;
   }

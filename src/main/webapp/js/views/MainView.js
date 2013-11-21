@@ -10,25 +10,27 @@ define(
         contentRowItem, ftrContainer, NotePresenter) {
       function MainView() {
         var me = this;
-        me.note = '';
+        var currentNote = '';
         var $editor;
 
         function getData() {
           return {
-            note : me.note,
+            note : currentNote,
             value : $('#wysihtml5-textarea').val()
           };
         }
 
         this.getData = getData;
 
-        function storeNote() {
-          // TODO pass content view
-          NotePresenter.storeNote(me);
+        function appendNewNotesMenuItem($ul) {
+          $ul.append('<li data-note-id="-1">New...</li>');
+          $ul.append('<li class="divider"></li>');
         }
-
         function loadNotesMenu(notesData) {
           var $ul = $('.navbar-header ul');
+          $ul.empty();
+          appendNewNotesMenuItem($ul);
+
           for (var i = 0, len = notesData.length; i < len; i++) {
             $li = $('<li data-note-id="' + notesData[i].id + '">'
                 + notesData[i].title + '</li>');
@@ -37,10 +39,36 @@ define(
         }
 
         function loadNote(note) {
-          me.note = note;
+          currentNote = note;
           $editor.setValue(note.data, true);
         }
 
+        function onNoteMenuItem(event) {
+          var noteId = $(event.currentTarget).attr('data-note-id');
+          if (noteId < 0) {
+            currentNote = '';
+            $editor.setValue("");
+          } else {
+            NotePresenter.getNote(noteId, false, {
+              success : loadNote
+            });
+          }
+        }
+
+        function getNotesMenuItems() {
+          NotePresenter.getNote('', true, {
+            success : loadNotesMenu
+          });
+        }
+
+        function storeNote() {
+          // TODO pass content view
+          NotePresenter.storeNote(me, {
+            success : getNotesMenuItems
+          });
+        }
+
+        // TODO separate out to a header view
         function addHeader(parent) {
           var $hdrContainer = $(hdrContainer);
           parent.append($hdrContainer);
@@ -48,19 +76,11 @@ define(
           $hdr.append(hdrBar);
           $hdr.append(hdrCollapse);
 
-          $('.navbar-header ul').delegate(
-              'li',
-              'click',
-              function(event) {
-                NotePresenter.getNote($(event.currentTarget).attr(
-                    'data-note-id'), false, {
-                  success : loadNote
-                });
-              });
+          var $ul = $('.navbar-header ul');
+          appendNewNotesMenuItem($ul);
+          $ul.delegate('li', 'click', onNoteMenuItem);
 
-          NotePresenter.getNote('', true, {
-            success : loadNotesMenu
-          });
+          getNotesMenuItems();
         }
 
         // TODO separate out to a content view

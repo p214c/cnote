@@ -40,8 +40,9 @@ var Note = function() {
 
   function addNote(data) {
     var n = new note(notes.length + 1);
+    n.title += "-" + (notes.length + 1);
     _.assign(n, clearImmutableFields(data));
-
+    
     notes.push(n);
 
     return n;
