@@ -21,7 +21,7 @@ var Note = function() {
     delete data.id;
     delete data.created;
     delete data['last-modified'];
-    
+
     return data;
   }
 
@@ -49,12 +49,12 @@ var Note = function() {
   this.addNote = addNote;
 
   function updateNote(id, data) {
-    var n = notes[id-1];
+    var n = notes[id - 1];
     if (n) {
       _.assign(n, clearImmutableFields(data));
       n['last-modified'] = new Date().getTime();
     }
-    
+
     return n;
   }
   this.updateNote = updateNote;
@@ -64,7 +64,20 @@ var Note = function() {
 var instance = new Note();
 
 exports.findAll = function(req, res) {
-  res.send(instance.getNotes());
+  var ns = instance.getNotes();
+  if (req.query.ids) {
+    var nsIds = [];
+    for (var j = 0, jlen = ns.length; j < jlen; j++) {
+      nsIds.push({
+        id : ns[j].id,
+        title : ns[j].title
+      });
+    }
+
+    ns = nsIds;
+  }
+
+  res.send(ns);
 };
 
 exports.findById = function(req, res) {
