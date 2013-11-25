@@ -7,7 +7,7 @@ var https = require('https');
 var notes = require('./routes/notes');
 
 var application_root = __dirname;
-var webapp_root = path.join(application_root, '../webapp');
+var webapp_root = path.join(application_root, 'public');
 var oneDay = 86400000;
 
 function logErrors(err, req, res, next) {
@@ -31,7 +31,7 @@ var app = express();
 
 // app configure
 app.use(express.compress());
-app.use(express.favicon('../webapp/favicon.ico'));
+app.use(express.favicon('public/favicon.ico'));
 app.use(express.bodyParser());
 
 // you need this line so the .get etc. routes are run and if an error within,
