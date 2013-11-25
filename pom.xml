@@ -32,13 +32,10 @@
 		<developerConnection>scm:git:git@github.com:p214c/cnote.git</developerConnection>
 	</scm>
 
-	<!-- Use this in a project that pulls in the cnote artifacts from github 
-		acting as maven repo <repositories> <repository> <id>artifacts-mvn-repo</id> 
-		<url>https://raw.github.com/p214c/artifacts/snapshots</url> <snapshots> <enabled>true</enabled> 
-		<updatePolicy>always</updatePolicy> </snapshots> </repository> </repositories> -->
-
-	<dependencies>
-	</dependencies>
+	<modules>
+		<module>cnote-app</module>
+		<module>cnote-svr</module>
+	</modules>
 
 	<build>
 		<plugins>
@@ -102,91 +99,6 @@
 					</gitDescribe>
 				</configuration>
 			</plugin>
-			<!-- http://shcatula.wordpress.com/2013/01/20/nodejs-jenkins-integration-using-maven/ -->
-			<plugin>
-				<groupId>com.github.skwakman.nodejs-maven-plugin</groupId>
-				<artifactId>nodejs-maven-plugin</artifactId>
-				<version>1.0.4</version>
-				<executions>
-					<execution>
-						<id>extract_nodejs</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>extract</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<!-- target directory for node binaries -->
-					<targetDirectory>
-						${project.build.directory}/nodejs/
-					</targetDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<id>stage_nodejs_files</id>
-						<phase>compile</phase>
-						<configuration>
-							<target>
-								<echo message="========== staging nodejs files ===================" />
-								<copy todir="${project.build.directory}/nodejs" overwrite="true">
-									<fileset dir="${basedir}/src/main/server">
-										<exclude name="**/node_modules/**" />
-									</fileset>
-								</copy>
-								<copy todir="${project.build.directory}/nodejs/public"
-									overwrite="true">
-									<fileset dir="${basedir}/src/main/webapp" />
-								</copy>
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>install_nodejs_modules</id>
-						<phase>compile</phase>
-						<configuration>
-							<tasks>
-								<echo message="========== installing node_modules ===================" />
-								<exec executable="npm" dir="${project.build.directory}/nodejs/"
-									failonerror="true">
-									<arg value="install" />
-								</exec>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<id>make-zip-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<finalName>${project.artifactId}-${project.version}</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
-							<descriptors>
-								<descriptor>assembly.xml</descriptor>
-							</descriptors>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
-
 </project>
