@@ -50,6 +50,8 @@
 						${project.version} release</description>
 					<message>maven artifacts for ${project.version}</message>  <!-- git commit message -->
 					<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+					<merge>true</merge>                                        <!-- merge with the current tree or completely replace the tree that the 
+						commit points to -->
 					<outputDirectory>${artifacts.outputDirectory}</outputDirectory> <!-- matches distribution management repository url above assumed git artifacts 
 						repo relative to this local git repo -->
 					<branch>${git.branch}</branch>                       <!-- remote branch name -->
