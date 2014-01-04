@@ -36,3 +36,8 @@ project contains the server code base. NodeJS javascript source for the web appl
   * used in development as the execution environment to launch the nodejs server (target/nodejs/nodejs server.js)
    * answers on https://localhost:8443/cnote - the note capture client using certificate stored in ./sslcert directory
    * answers on https://localhost:8443/notes - the REST API for the note resources using certificate stored in ./sslcert directory 
+
+cnote-phonegap
+---------
+project contains the code generated using the phonegap wrapper 
+   
