@@ -4,11 +4,17 @@ define([ 'jquery', 'views/MainView' ], function($, MainView) {
   // Update DOM on a Received Event
   function receivedEvent(id) {
     var parentElement = document.getElementById(id);
-    var listeningElement = parentElement.querySelector('.listening');
-    var receivedElement = parentElement.querySelector('.received');
+    if (parentElement) {
+      var listeningElement = parentElement.querySelector('.listening');
+      var receivedElement = parentElement.querySelector('.received');
 
-    listeningElement.setAttribute('style', 'display:none;');
-    receivedElement.setAttribute('style', 'display:block;');
+      if (listeningElement) {
+        listeningElement.setAttribute('style', 'display:none;');
+      }
+      if (receivedElement) {
+        receivedElement.setAttribute('style', 'display:block;');
+      }
+    }
 
     console.log('Received Event: ' + id);
   }
@@ -22,14 +28,18 @@ define([ 'jquery', 'views/MainView' ], function($, MainView) {
     me.receivedEvent('deviceready');
     MainView.init();
   }
-  this.onDeviceReady = onDeviceReady;
 
   // Bind Event Listeners
   //
   // Bind any events that are required on startup. Common events are:
   // 'load', 'deviceready', 'offline', and 'online'.
   function bindEvents() {
-    document.addEventListener('deviceready', this.onDeviceReady, false);
+    // if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/)) {
+    if (window.cordova) {
+      document.addEventListener('deviceready', onDeviceReady, false);
+    } else {
+      onDeviceReady(); // this is the browser
+    }
   }
 
   var initialize = function() {
