@@ -20,7 +20,6 @@
 			<url>https://raw.github.com/p214c/artifacts/snapshots</url>
 			<snapshots>
 				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
 	</repositories>

@@ -1,0 +1,124 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.cp</groupId>
+		<artifactId>cnote</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<artifactId>cnote-phonegap</artifactId>
+	<packaging>pom</packaging>
+
+	<!-- Use this in a project that pulls in the cnote artifacts from github 
+		acting as maven repo -->
+	<repositories>
+		<repository>
+			<id>artifacts-mvn-repo</id>
+			<url>https://raw.github.com/p214c/artifacts/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.cp</groupId>
+			<artifactId>cnote-app</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- delete the ${basedir}/www directory since it is copied on every build 
+				using the cnote-app project dependency -->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>www</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<!-- unpack the cnote-app project dependency war to the ${basedir}/www 
+				directory as the phonegap client application -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<id>unpack_webapp</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/www</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<useSubDirectoryPerArtifact>false</useSubDirectoryPerArtifact>
+							<includeGroupIds>com.cp</includeGroupIds>
+							<stripVersion>true</stripVersion>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- execute the phonegap command line client corresponding to the maven 
+				lifecycle phase -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>build_android</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<echo message="========== building android app from staged web files ===================" />
+                <exec executable="phonegap" dir="${basedir}"
+                  failonerror="true">
+                  <arg value="local" />
+                  <arg value="build" />
+                  <arg value="android" />
+                </exec>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>install_android</id>
+						<phase>verify</phase>
+						<configuration>
+							<tasks>
+								<echo message="========== installing android app build ===================" />
+                <exec executable="phonegap" dir="${basedir}"
+                  failonerror="true">
+                  <arg value="install" />
+                  <arg value="android" />
+                </exec>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
