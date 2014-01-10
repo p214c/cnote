@@ -88,6 +88,7 @@
 						<configuration>
 							<target>
 								<echo message="========== building android app from staged web files ===================" />
+								<mkdir dir="${basedir}/platforms/android/assets"/> 
                 <exec executable="phonegap" dir="${basedir}"
                   failonerror="true">
                   <arg value="local" />
