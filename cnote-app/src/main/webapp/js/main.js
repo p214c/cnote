@@ -9,8 +9,13 @@ require.config({
     // plugins
     text : 'vendor/text',
     bootstrap : 'vendor/bootstrap.min',
-    wysihtml5 : 'vendor/wysihtml5-0.3.0.min',
-    'bootstrap-wysihtml5' : 'vendor/bootstrap-wysihtml5-0.0.3.min',
+    lodash : 'vendor/lodash',
+    'jquery-hotkeys' : 'vendor/jquery.hotkeys',
+    'jquery-delayed' : 'vendor/jquery.delayed-1.1.0.min',
+    // switching to a more mobile friendly text editor
+    //wysihtml5 : 'vendor/wysihtml5-0.3.0.min',
+    //'bootstrap-wysihtml5' : 'vendor/bootstrap-wysihtml5-0.0.3.min',
+    'bootstrap-wysiwyg' : 'vendor/bootstrap-wysiwyg',
 
     // application folders
     // collections: 'app/collections',
@@ -26,8 +31,10 @@ require.config({
   // sets the configuration for your AMD incompatible third party scripts
   shim : {
     bootstrap : [ 'jquery' ],
-    wysihtml5 : [ 'jquery' ],
-    'bootstrap-wysihtml5' : [ 'jquery', 'bootstrap', 'wysihtml5' ],
+    // switching to a more mobile friendly text editor
+//    wysihtml5 : [ 'jquery' ],
+//    'bootstrap-wysihtml5' : [ 'jquery', 'bootstrap', 'wysihtml5' ],
+    'bootstrap-wysiwyg' : ['jquery', 'jquery-hotkeys', 'bootstrap'],
   // backbone: {
   // // Depends on underscore/lodash and jQuery
   // 'deps': ['underscore', 'jquery'],
@@ -39,6 +46,6 @@ require.config({
 });
 
 // load of bootstrap and the app
-require([ 'jquery', 'app', 'bootstrap' ], function($, App) {
+require([ 'jquery', 'app', 'bootstrap', 'lodash' ], function($, App) {
   App.initialize();
 });
