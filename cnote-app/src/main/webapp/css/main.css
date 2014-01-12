@@ -10,6 +10,19 @@ html,body {
 	height: 100%;
 }
 
+button, .btn {
+	font-size : 28px;
+}
+
+button.navbar-toggle {
+	height : 54px;
+	width : 75px;
+}
+
+.navbar-toggle .icon-bar {
+	width : 54px;
+}
+
 .body-wrapper {
 	min-height: 100%;
 	height: auto !important;
@@ -25,6 +38,7 @@ html,body {
 .content-container {
 	height: 100%;
 	outline: none;
+	margin-top: 20px;
 }
 
 .row {
@@ -53,14 +67,16 @@ html,body {
 	filter: none;
 	border-top: 1px solid #022241;
 	border-color: #022f5a;
+	margin-top: 20px;
 }
 
 .btn-store {
+	border-color: rgba(2, 47, 90, 0.3);
 	margin: 4px;
 }
 
 .btn-store:hover,.btn-store:focus,.btn-store.active {
-	border-color: rgba(0, 0, 0, 0.3);
+	border-color: rgba(2, 47, 90, 0.8);
 }
 
 #cnote-editor {
@@ -73,6 +89,9 @@ html,body {
   border-left: none !important;
   border-right: none !important;
   outline: none !important;
+  -webkit-user-select:auto;
+  -webkit-user-drag:auto;
+  -webkit-user-modify:read-write;  
 }
 
 .navbar-header .btn:first-child {

@@ -39,7 +39,7 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       var $li = $(event.currentTarget);
       $li.parent().children('.active').removeClass('active');
       $li.addClass('active');
-      
+
       var noteId = $(event.currentTarget).attr('data-note-id');
       if (noteId < 0) {
         currentNote = '';
@@ -181,7 +181,7 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       $bodyContainer.height($('body').innerHeight());
 
       var $contentContainer = $bodyContainer.children('.content-container');
-      var height = $bodyContainer.height();
+      var height = $bodyContainer.innerHeight();
 
       // calculate height of the content container excluding the other children from overall height
       _.forEach($bodyContainer.children(), function(child) {
@@ -189,7 +189,7 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
           return;
         }
 
-        height -= $(child).height();
+        height -= $(child).outerHeight(true);
       });
 
       // set the content con
