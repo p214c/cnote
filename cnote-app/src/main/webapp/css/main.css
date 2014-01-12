@@ -1,6 +1,10 @@
+@import 'bootstrap.min.css';
+
 @import 'bootstrap-theme.css';
 
-@import 'bootstrap-wysihtml5-0.0.3.css';
+@import 'font-awesome.css';
+
+@import 'wysiwyg-color.css';
 
 html,body {
 	height: 100%;
@@ -59,21 +63,16 @@ html,body {
 	border-color: rgba(0, 0, 0, 0.3);
 }
 
-.wysihtml5-sandbox {
-	width: 100% !important;
-	height: 100% !important;
-	/*	background-color: #9ccefc !important; */
-	border-color-top: #022f5a !important;
-	border-bottom: none !important;
-	border-left: none !important;
-	border-right: none !important;
-	outline: none !important;
-}
-
-#wysihtml5-textarea {
+#cnote-editor {
 	resize: none;
 	width: 100%;
 	height: 100%;
+  background-color: #fff;
+  border-color-top: #022f5a !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  outline: none !important;
 }
 
 .navbar-header .btn:first-child {
@@ -90,4 +89,44 @@ html,body {
 
 .dropdown-menu li {
 	margin-left: 4px;
+}
+
+#voiceBtn {
+  width: 20px;
+  color: transparent;
+  background-color: transparent;
+  transform: scale(2.0, 2.0);
+  -webkit-transform: scale(2.0, 2.0);
+  -moz-transform: scale(2.0, 2.0);
+  border: transparent;
+  cursor: pointer;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+div[data-role="editor-toolbar"] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+div[data-role="editor-toolbar"] .caret {
+	border-top-color: #2FA4E7;
+}
+
+.dropdown-menu a {
+  cursor: pointer;
+}
+
+.watermark {
+  opacity: .5;
+}
+
+.navbar-header .dropdown-menu > li.active,
+.navbar-header .dropdown-menu > li.active:hover,
+.navbar-header .dropdown-menu > li.active:focus {
+  color: #555555;
+  cursor: default;
+  background-color: #033c73;
+  border-bottom-color: transparent;
 }

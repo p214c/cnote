@@ -8,7 +8,7 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
     function getData() {
       return {
         note : currentNote,
-        value : $('#wysihtml5-textarea').val()
+        value : $('#cnote-editor').html()
       };
     }
 
@@ -31,14 +31,19 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
 
     function loadNote(note) {
       currentNote = note;
-      $editor.val(note.data);
+      $editor.removeClass('watermark');
+      $editor.html(note.data);
     }
 
     function onNoteMenuItem(event) {
+      var $li = $(event.currentTarget);
+      $li.parent().children('.active').removeClass('active');
+      $li.addClass('active');
+      
       var noteId = $(event.currentTarget).attr('data-note-id');
       if (noteId < 0) {
         currentNote = '';
-        $editor.val("");
+        $editor.empty();
       } else {
         NotePresenter.getNote(noteId, false, {
           success : loadNote
@@ -74,6 +79,68 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       getNotesMenuItems();
     }
 
+    function initToolbarBootstrapBindings(parent) {
+      var fonts = [ 'Serif', 'Sans', 'Arial', 'Arial Black', 'Courier', 'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times', 'Times New Roman', 'Verdana' ];
+      var $fontTarget = $(parent.find('[title=Font]')).siblings('.dropdown-menu');
+      _.forEach(fonts, function(fontName) {
+        $fontTarget.append($('<li><a data-edit="fontName ' + fontName + '" style="font-family:\'' + fontName + '\'">' + fontName + '</a></li>'));
+      });
+
+      $(parent.find('a[title]')).tooltip({
+        container : 'body'
+      });
+
+      $(parent.find('.dropdown-menu input')).click(function() {
+        return false;
+      }).change(function() {
+        $(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+      }).keydown('esc', function() {
+        this.value = '';
+        $(this).change();
+      });
+
+      $(parent.find('[data-role=magic-overlay]')).each(function() {
+        var overlay = $(this), target = $(overlay.data('target'));
+        overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+      });
+      // if ("onwebkitspeechchange" in document.createElement("input")) {
+      // var editorOffset = $('#editor').offset();
+      // $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left:
+      // editorOffset.left+$('#editor').innerWidth()-35});
+      // } else {
+      // $('#voiceBtn').hide();
+      // }
+    }
+
+    function showErrorAlert(reason, detail) {
+      var msg = '';
+      if (reason === 'unsupported-file-type') {
+        msg = "Unsupported format " + detail;
+      } else {
+        console.log("error uploading file", reason, detail);
+      }
+      $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>' + '<strong>File upload error</strong> ' + msg + ' </div>').prependTo('#alerts');
+    }
+
+    function watermark(editor) {
+      var mark = 'Capture your thoughts here!';
+
+      $(editor).focus(function() {
+        var $div = $(this);
+        if ($div.hasClass('watermark')) {
+          $div.empty();
+        }
+      }).blur(function() {
+        var $div = $(this);
+        if (!$div.html()) {
+          $div.html(mark);
+        }
+      }).keyup(function() {
+        var $div = $(this);
+        $div.removeClass('watermark');
+      }).text(mark);
+    }
+
     // TODO separate out to a content view
     function addContent(parent) {
       var $contentContainer = $(contentContainer);
@@ -83,8 +150,13 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       var $contentRowItem = $(contentRowItem);
       $content.append($contentRowItem);
 
-      $editor = $contentRowItem.children('textarea:first-child');
-      $editor.wysiwyg();
+      $editor = $contentRowItem.children('#cnote-editor');
+      $editor.wysiwyg({
+        fileUploadError : showErrorAlert
+      });
+      watermark($editor);
+
+      initToolbarBootstrapBindings($contentRowItem);
 
       return $contentContainer;
     }
