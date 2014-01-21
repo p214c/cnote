@@ -1,8 +1,10 @@
-var express = require("express");
-var path = require("path");
+var express = require('express');
+var passport = require('passport');
+var path = require('path');
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
+var LocalStrategy = require('passport-local').Strategy;
 
 var notes = require('./routes/notes');
 
@@ -27,12 +29,37 @@ function clientErrorHandler(err, req, res, next) {
   }
 }
 
+passport.use(new LocalStrategy(function(username, password, done) {
+  User.findOne({
+    username : username
+  }, function(err, user) {
+    if (err) {
+      return done(err);
+    }
+    if (!user) {
+      return done(null, false, {
+        message : 'Invalid username.'
+      });
+    }
+    if (!user.validPassword(password)) {
+      return done(null, false, {
+        message : 'Invalid password.'
+      });
+    }
+
+    return done(null, user);
+  });
+}));
+
 var app = express();
 
 // app configure
 app.use(express.compress());
 app.use(express.favicon('public/favicon.ico'));
+app.use(express.cookieParser('CNOTESESSION'));
 app.use(express.bodyParser());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // you need this line so the .get etc. routes are run and if an error within,
 // then the error is parsed to the ned middleware (your error reporter)
@@ -41,15 +68,16 @@ app.use(logErrors);
 app.use(clientErrorHandler);
 
 // static files
-app.use('/cnote', express.static(webapp_root), {
+app.use('/cnote', passport.authenticate('local'), express.static(webapp_root), {
   maxAge : oneDay
 });
 
 // REST
-app.get('/notes', notes.findAll);
-app.get('/notes/:id', notes.findById);
-app.post('/notes', notes.add);
-app.put('/notes/:id', notes.update);
+app.get('/notes', passport.authenticate('local'), notes.findAll);
+app.get('/notes/:id', passport.authenticate('local'), notes.findById);
+app.post('/notes', passport.authenticate('local'), notes.add);
+app.put('/notes/:id', passport.authenticate('local'), notes.update);
+
 
 // self signed cert and key generated with openssl -
 // http://stackoverflow.com/questions/10175812/how-to-build-a-self-signed-certificate-with-openssl
