@@ -105,14 +105,14 @@
 						<id>install_android</id>
 						<phase>verify</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<echo message="========== installing android app build ===================" />
                 <exec executable="phonegap" dir="${basedir}"
                   failonerror="true">
                   <arg value="install" />
                   <arg value="android" />
                 </exec>
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>

@@ -7,6 +7,6 @@
     "express": "3.x",
     "lodash": "2.x",
     "passport": "0.1.18",
-    "passport-local": "0.1.16"
+    "passport-local": "0.1.6"
   }
 }
