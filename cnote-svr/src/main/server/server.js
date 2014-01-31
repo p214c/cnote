@@ -5,10 +5,11 @@ var http = require('http');
 var https = require('https');
 
 var notes = require('./routes/notes');
-var security = require('./routes/security');
+var security = require('./config/security');
 
 var application_root = __dirname;
 var webapp_root = path.join(application_root, 'public');
+var views_dir = path.join(application_root, 'views');
 var oneDay = 86400000;
 
 function logErrors(err, req, res, next) {
@@ -31,6 +32,8 @@ function clientErrorHandler(err, req, res, next) {
 var app = express();
 
 // app configure
+app.set('views', views_dir);
+app.set('view engine', 'jade');
 app.use(express.compress());
 app.use(express.favicon('public/favicon.ico'));
 app.use(express.cookieParser('CNOTESESSION'));
@@ -44,16 +47,25 @@ app.use(logErrors);
 app.use(clientErrorHandler);
 
 // static files
-app.use('/cnote', security.authenticate('local'), express.static(webapp_root), {
+app.use('/cnote', security.isAuthenticated, express.static(webapp_root), {
   maxAge : oneDay
 });
 
-// REST
-app.get('/notes', security.authenticate('local'), notes.findAll);
-app.get('/notes/:id', security.authenticate('local'), notes.findById);
-app.post('/notes', security.authenticate('local'), notes.add);
-app.put('/notes/:id', security.authenticate('local'), notes.update);
+// login page
+app.get("/login", function(req, res) {
+  res.render("login");
+});
 
+app.post("/login", security.authenticate('local', {
+  successRedirect : "/cnote",
+  failureRedirect : "/login",
+}));
+
+// REST
+app.get('/notes', security.isAuthenticated, notes.findAll);
+app.get('/notes/:id', security.isAuthenticated, notes.findById);
+app.post('/notes', security.isAuthenticated, notes.add);
+app.put('/notes/:id', security.isAuthenticated, notes.update);
 
 // self signed cert and key generated with openssl -
 // http://stackoverflow.com/questions/10175812/how-to-build-a-self-signed-certificate-with-openssl
