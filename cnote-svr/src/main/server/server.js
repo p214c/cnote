@@ -1,12 +1,11 @@
 var express = require('express');
-var passport = require('passport');
 var path = require('path');
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
-var LocalStrategy = require('passport-local').Strategy;
 
 var notes = require('./routes/notes');
+var security = require('./routes/security');
 
 var application_root = __dirname;
 var webapp_root = path.join(application_root, 'public');
@@ -29,28 +28,6 @@ function clientErrorHandler(err, req, res, next) {
   }
 }
 
-passport.use(new LocalStrategy(function(username, password, done) {
-  User.findOne({
-    username : username
-  }, function(err, user) {
-    if (err) {
-      return done(err);
-    }
-    if (!user) {
-      return done(null, false, {
-        message : 'Invalid username.'
-      });
-    }
-    if (!user.validPassword(password)) {
-      return done(null, false, {
-        message : 'Invalid password.'
-      });
-    }
-
-    return done(null, user);
-  });
-}));
-
 var app = express();
 
 // app configure
@@ -58,8 +35,7 @@ app.use(express.compress());
 app.use(express.favicon('public/favicon.ico'));
 app.use(express.cookieParser('CNOTESESSION'));
 app.use(express.bodyParser());
-app.use(passport.initialize());
-app.use(passport.session());
+security.init(app);
 
 // you need this line so the .get etc. routes are run and if an error within,
 // then the error is parsed to the ned middleware (your error reporter)
@@ -68,15 +44,15 @@ app.use(logErrors);
 app.use(clientErrorHandler);
 
 // static files
-app.use('/cnote', passport.authenticate('local'), express.static(webapp_root), {
+app.use('/cnote', security.authenticate('local'), express.static(webapp_root), {
   maxAge : oneDay
 });
 
 // REST
-app.get('/notes', passport.authenticate('local'), notes.findAll);
-app.get('/notes/:id', passport.authenticate('local'), notes.findById);
-app.post('/notes', passport.authenticate('local'), notes.add);
-app.put('/notes/:id', passport.authenticate('local'), notes.update);
+app.get('/notes', security.authenticate('local'), notes.findAll);
+app.get('/notes/:id', security.authenticate('local'), notes.findById);
+app.post('/notes', security.authenticate('local'), notes.add);
+app.put('/notes/:id', security.authenticate('local'), notes.update);
 
 
 // self signed cert and key generated with openssl -
