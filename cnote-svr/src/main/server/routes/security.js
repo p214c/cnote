@@ -1,10 +1,26 @@
 var Security = function() {
+  var db = require('./db');
   var passport = require('passport');
   var LocalStrategy = require('passport-local').Strategy;
 
+  passport.use(new LocalStrategy(function(username, password, done) {
+    User.findOne({
+      username : username
+    }, function(err, user) {
+      if (err) {
+        return done(err);
+      }
+      if (!user) {
+        return done(null, false, {
+          message : 'Incorrect username.'
+        });
+      }
+
+    });
+  }));
   function initLocalStrategy() {
     passport.use(new LocalStrategy(function(username, password, done) {
-      User.findOne({
+      db.Users.findOne({
         username : username
       }, function(err, user) {
         if (err) {
@@ -15,11 +31,17 @@ var Security = function() {
             message : 'Invalid username.'
           });
         }
-        if (!user.validPassword(password)) {
-          return done(null, false, {
+
+       hash(password, user.salt, function(err, hash) {
+          if (err) {
+            return done(err);
+          }
+          if (hash == user.hash)
+            return done(null, user);
+          done(null, false, {
             message : 'Invalid password.'
           });
-        }
+        });
 
         return done(null, user);
       });
