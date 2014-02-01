@@ -81,6 +81,6 @@ exports.isAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.redirect("/login");
-  }
+    res.status(401);
+    res.render('login.jade', {title: '401: Unauthorized', url: req.url });  }
 };

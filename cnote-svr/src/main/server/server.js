@@ -36,8 +36,11 @@ app.set('views', views_dir);
 app.set('view engine', 'jade');
 app.use(express.compress());
 app.use(express.favicon('public/favicon.ico'));
-app.use(express.cookieParser('CNOTESESSION'));
+app.use(express.cookieParser());
 app.use(express.bodyParser());
+app.use(express.session({
+  secret : 'CNOTESESSION'
+}));
 security.init(app);
 
 // you need this line so the .get etc. routes are run and if an error within,
@@ -47,7 +50,7 @@ app.use(logErrors);
 app.use(clientErrorHandler);
 
 // static files
-app.use('/cnote', security.isAuthenticated, express.static(webapp_root), {
+app.use('/cnote', express.static(webapp_root), {
   maxAge : oneDay
 });
 
