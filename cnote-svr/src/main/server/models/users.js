@@ -2,8 +2,6 @@ var Users = function() {
   var mongoose = require('mongoose');
   var hash = require('../util/hash');
 
-  this.User;
-
   var UserSchema = new mongoose.Schema({
     firstName : String,
     lastName : String,
@@ -47,15 +45,13 @@ var Users = function() {
 
   function init() {
     mongoose.connect("mongodb://localhost/cnote");
-    User = mongoose.model('userauths', UserSchema);
+    exports.User = mongoose.model('userauths', UserSchema);
   }
   this.init = init;
 
 };
 
 var instance = new Users();
-
-exports.User = instance.User;
 
 exports.init = function() {
   instance.init();

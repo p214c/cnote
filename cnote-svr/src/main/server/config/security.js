@@ -58,6 +58,7 @@ var Security = function() {
   this.authenticate = authenticate;
 
   function init(app) {
+    dbUsers.init();
     initLocalStrategy();
     app.use(passport.initialize());
     app.use(passport.session());
