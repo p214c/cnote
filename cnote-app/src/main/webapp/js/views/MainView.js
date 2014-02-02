@@ -1,5 +1,5 @@
 define([ 'text!templates/main-header-container.htm', 'text!templates/main-header-bar.htm', 'text!templates/main-header-collapse.htm', 'text!templates/main-content-container.htm', 'text!templates/main-content-row-item.htm',
-    'text!templates/main-footer-container.htm', 'presenters/NotePresenter', 'bootstrap-wysiwyg', 'jquery-delayed' ], function(hdrContainer, hdrBar, hdrCollapse, contentContainer, contentRowItem, ftrContainer, NotePresenter) {
+    'text!templates/main-footer-container.htm', 'presenters/NotePresenter', 'bootstrap-wysiwyg', 'jquery-delayed', 'jquery-blockui' ], function(hdrContainer, hdrBar, hdrCollapse, contentContainer, contentRowItem, ftrContainer, NotePresenter) {
   function MainView() {
     var me = this;
     var currentNote = '';
@@ -18,7 +18,42 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       $ul.append('<li data-note-id="-1">New...</li>');
       $ul.append('<li class="divider"></li>');
     }
+
+    function disableApp() {
+      // mask the content and footer
+      var blockOptions = {
+        message : null,
+        overlayCSS : {
+          cursor : 'default'
+        }
+      };
+
+      $('div.body-container').block(blockOptions);
+      $('div.footer-container').block(blockOptions);
+
+      // disable header notes menu
+      $('div.navbar-header button.navbar-btn').attr('disabled', 'disabled');
+
+      // display login menu header
+      $('div.header-container .navbar-toggle').click();
+    }
+
+    function enableApp() {
+      $('div.body-container').unblock();
+      $('div.footer-container').unblock();
+
+      // enable header notes menu
+      $('div.navbar-header button.navbar-btn').removeAttr('disabled');
+    }
+
+    function loadNotesFailed(resp) {
+      if (resp.status == 401) {
+        disableApp();
+      }
+    }
+
     function loadNotesMenu(notesData) {
+      enableApp();
       var $ul = $('.navbar-header ul');
       $ul.empty();
       appendNewNotesMenuItem($ul);
@@ -53,7 +88,8 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
 
     function getNotesMenuItems() {
       NotePresenter.getNote('', true, {
-        success : loadNotesMenu
+        success : loadNotesMenu,
+        failure : loadNotesFailed
       });
     }
 
@@ -61,6 +97,23 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       // TODO pass content view
       NotePresenter.storeNote(me, {
         success : getNotesMenuItems
+      });
+    }
+
+    function loginFailed(response) {
+      // TODO: move css to css file
+      $('form.navbar-form').block({
+        message : 'Sign in failed. Please verify and retry.',
+        timeout : 2000,
+        css : {
+          border : 'none',
+          padding : '15px',
+          backgroundColor : '#000',
+          '-webkit-border-radius' : '10px',
+          '-moz-border-radius' : '10px',
+          opacity : .5,
+          color : '#fff'
+        }
       });
     }
 
@@ -75,6 +128,31 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       var $ul = $('.navbar-header ul');
       appendNewNotesMenuItem($ul);
       $ul.delegate('li', 'click', onNoteMenuItem);
+
+      // set focus to email input field when settings button selected
+      // TODO: why is the show event not being captured to set focus?
+      $hdrContainer.find('form.navbar-form').on('show', function() {
+        $hdrContainer.find('input[placeholder="email"]').focus();
+      });
+
+      // add submit handler to login
+      $hdrContainer.find('form.navbar-form button:submit').on('click', function(event) {
+        var $form = $(this).parent();
+        NotePresenter.login(me, {
+          email : $form.find('input[placeholder="email"]').val(),
+          password : $form.find('input[placeholder="password"]').val()
+        }, {
+          success : function() {
+            // close the settings menu and load the user notes
+            $('div.header-container .navbar-toggle').click();
+            getNotesMenuItems();
+          },
+          failure : loginFailed
+        });
+
+        // prevent from default that refreshes the page
+        event.preventDefault();
+      });
 
       getNotesMenuItems();
     }

@@ -60,8 +60,7 @@ app.get("/login", function(req, res) {
 });
 
 app.post("/login", security.authenticate('local', {
-  successRedirect : "/cnote",
-  failureRedirect : "/login",
+  successRedirect : "/cnote"
 }));
 
 // REST

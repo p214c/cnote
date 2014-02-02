@@ -3,19 +3,20 @@ require.config({
   baseUrl : 'js',
   paths : {
     // core libraries
-    jquery : 'vendor/jquery-1.10.2.min',
-    // 'underscore': 'vendor/lodash',
+    jquery : 'lib/jquery-1.10.2.min',
+    // 'underscore': 'lib/lodash',
 
     // plugins
-    text : 'vendor/text',
-    bootstrap : 'vendor/bootstrap.min',
-    lodash : 'vendor/lodash',
-    'jquery-hotkeys' : 'vendor/jquery.hotkeys',
-    'jquery-delayed' : 'vendor/jquery.delayed-1.1.0.min',
+    text : 'lib/text',
+    bootstrap : 'lib/bootstrap.min',
+    lodash : 'lib/lodash',
+    'jquery-hotkeys' : 'lib/jquery.hotkeys',
+    'jquery-delayed' : 'lib/jquery.delayed-1.1.0.min',
     // switching to a more mobile friendly text editor
-    //wysihtml5 : 'vendor/wysihtml5-0.3.0.min',
-    //'bootstrap-wysihtml5' : 'vendor/bootstrap-wysihtml5-0.0.3.min',
-    'bootstrap-wysiwyg' : 'vendor/bootstrap-wysiwyg',
+    // wysihtml5 : 'lib/wysihtml5-0.3.0.min',
+    // 'bootstrap-wysihtml5' : 'lib/bootstrap-wysihtml5-0.0.3.min',
+    'bootstrap-wysiwyg' : 'lib/bootstrap-wysiwyg',
+    'jquery-blockui' : 'lib/jquery.blockUI',
 
     // application folders
     // collections: 'app/collections',
@@ -32,9 +33,10 @@ require.config({
   shim : {
     bootstrap : [ 'jquery' ],
     // switching to a more mobile friendly text editor
-//    wysihtml5 : [ 'jquery' ],
-//    'bootstrap-wysihtml5' : [ 'jquery', 'bootstrap', 'wysihtml5' ],
-    'bootstrap-wysiwyg' : ['jquery', 'jquery-hotkeys', 'bootstrap'],
+    // wysihtml5 : [ 'jquery' ],
+    // 'bootstrap-wysihtml5' : [ 'jquery', 'bootstrap', 'wysihtml5' ],
+    'bootstrap-wysiwyg' : [ 'jquery', 'jquery-hotkeys', 'bootstrap' ],
+    'jquery-blockui' : [ 'jquery' ]
   // backbone: {
   // // Depends on underscore/lodash and jQuery
   // 'deps': ['underscore', 'jquery'],

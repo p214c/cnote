@@ -1,4 +1,5 @@
 define([ 'models/Note', 'jquery' ], function(Note) {
+  // TODO encrypt all payloads locally when plugin and user key are available
   function NotePresenter() {
     var me = this;
     me.success = '';
@@ -6,6 +7,20 @@ define([ 'models/Note', 'jquery' ], function(Note) {
       alert(error + '\n\t' + jqXHR.responseText);
     };
 
+    function login(view, formFields, callbacks) {
+      var success = callbacks ? callbacks.success : me.success;
+      var failure = callbacks ? callbacks.failure : me.failure;
+
+      $.ajax({
+        type : 'POST',
+        url : '/login',
+        data : JSON.stringify(formFields),
+        success : success,
+        contentType : 'application/json'
+      }).fail(failure);      
+    }
+    this.login = login;
+    
     function getNote(id, justIds, callbacks) {
       var type = 'GET';
       var url = '/notes' + (id ? '/' + id : '');
