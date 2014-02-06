@@ -83,7 +83,12 @@
 						<configuration>
 							<target>
 								<echo message="========== installing node_modules ===================" />
-								<exec executable="npm" dir="${project.build.directory}/nodejs/"
+								<exec executable="cmd" dir="${project.build.directory}/nodejs/" os="Windows 8"
+									failonerror="true">
+									<arg value="npm" />
+									<arg value="install" />
+								</exec>
+								<exec executable="npm" dir="${project.build.directory}/nodejs/" os="Linux"
 									failonerror="true">
 									<arg value="install" />
 								</exec>
