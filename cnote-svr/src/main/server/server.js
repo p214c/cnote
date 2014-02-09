@@ -9,24 +9,25 @@ var security = require('./config/security');
 
 var application_root = __dirname;
 var webapp_root = path.join(application_root, 'public');
+var cnote_root = path.join(application_root, 'secure/cnote');
 var views_dir = path.join(application_root, 'views');
 var oneDay = 86400000;
 
 function logErrors(err, req, res, next) {
-	console.error(err.stack);
-	next(err);
+  console.error(err.stack);
+  next(err);
 }
 
 function clientErrorHandler(err, req, res, next) {
-	if (req.xhr) {
-		res.send(500, {
-			id : -1,
-			message : err.message,
-			resolution : 'Stop! Drop! and Roll!'
-		});
-	} else {
-		next(err);
-	}
+  if (req.xhr) {
+    res.send(500, {
+      id : -1,
+      message : err.message,
+      resolution : 'Stop! Drop! and Roll!'
+    });
+  } else {
+    next(err);
+  }
 }
 
 var app = express();
@@ -39,7 +40,7 @@ app.use(express.favicon('public/favicon.ico'));
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.session({
-	secret : 'CNOTESESSION'
+  secret : 'CNOTESESSION'
 }));
 security.init(app);
 
@@ -51,18 +52,30 @@ app.use(clientErrorHandler);
 app.all('/cnote/*', security.isAuthenticated);
 
 // static files
-app.use('/cnote', express.static(webapp_root), {
-	maxAge : oneDay
+app.use('/', express.static(webapp_root), {
+  maxAge : oneDay
+});
+
+app.use('/cnote', express.static(cnote_root), {
+  maxAge : oneDay
 });
 
 // login page
 app.get("/login", function(req, res) {
-	res.render("login");
+  res.render('login.jade', {
+    title : 'Welcome, please sign in'
+  });
 });
 
 app.post("/login", security.authenticate('local', {
-	successRedirect : "/cnote"
+  successRedirect : "/cnote",
+  failureRedirect : "/cnote"
 }));
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/cnote');
+});
 
 // REST
 app.get('/notes', security.isAuthenticated, notes.findAll);
@@ -77,8 +90,8 @@ app.put('/notes/:id', security.isAuthenticated, notes.update);
 var privateKey = fs.readFileSync('sslcert/key.pem', 'utf8');
 var certificate = fs.readFileSync('sslcert/cert.pem', 'utf8');
 var credentials = {
-	key : privateKey,
-	cert : certificate
+  key : privateKey,
+  cert : certificate
 };
 // var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);

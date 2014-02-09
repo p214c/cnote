@@ -112,7 +112,7 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/nodejs/public</outputDirectory>
+							<outputDirectory>${project.build.directory}/nodejs/secure/cnote</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<useSubDirectoryPerArtifact>false</useSubDirectoryPerArtifact>

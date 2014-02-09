@@ -1,9 +1,14 @@
-form(action='/login', method='post')
-    div
-        label Email:
-        input(type='text', name='email')
+doctype html
+html
+ head
+  title= title
+  link(rel='stylesheet', href='/css/server.css')
+ body
+  #container
+    form(action='/login', method='post')
       div
-        label Password:
-        input(type='password', name='password')
+        input(type='text', name='email', placeholder='Email Address')
       div
-        input(type='submit', value='Log In')
+        input(type='password', name='password', placeholder='Password')
+      div
+        input(type='submit', value='Sign In')
