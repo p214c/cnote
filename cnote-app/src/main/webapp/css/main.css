@@ -106,6 +106,10 @@ button.navbar-toggle {
 	background-color: #022f5a !important;
 }
 
+.navbar-collapse button[value="logout"] {
+	float: right;
+}
+
 .dropdown-menu li {
 	margin-left: 4px;
 }

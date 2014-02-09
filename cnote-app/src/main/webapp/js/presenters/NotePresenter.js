@@ -17,10 +17,22 @@ define([ 'models/Note', 'jquery' ], function(Note) {
         data : JSON.stringify(formFields),
         success : success,
         contentType : 'application/json'
-      }).fail(failure);      
+      }).fail(failure);
     }
     this.login = login;
-    
+
+    function logout(view, callbacks) {
+      var success = callbacks ? callbacks.success : me.success;
+      var failure = callbacks ? callbacks.failure : me.failure;
+
+      $.ajax({
+        type : 'GET',
+        url : '/logout',
+        success : success
+      }).fail(failure);
+    }
+    this.logout = logout;
+
     function getNote(id, justIds, callbacks) {
       var type = 'GET';
       var url = '/notes' + (id ? '/' + id : '');
@@ -37,7 +49,7 @@ define([ 'models/Note', 'jquery' ], function(Note) {
       }).fail(failure);
     }
     this.getNote = getNote;
-    
+
     function store(note, callbacks) {
       var type = note.id ? 'PUT' : 'POST';
       var url = '/notes' + (note.id ? '/' + note.id : '');

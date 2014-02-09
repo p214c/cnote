@@ -154,6 +154,19 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
         event.preventDefault();
       });
 
+      // add handler to logout
+      $hdrContainer.find('form.navbar-form button[value="logout"]').on('click', function(event) {
+        // logout and force reload
+        NotePresenter.logout(me, {
+          success : function() {
+            location.reload();
+          },
+          failure : function() {
+            location.reload();
+          }
+        });
+      });
+
       getNotesMenuItems();
     }
 
