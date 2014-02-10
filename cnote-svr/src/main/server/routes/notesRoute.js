@@ -1,7 +1,6 @@
-var Note = function() {
+var NotesRoute = function() {
   var _ = require('lodash');
-
-  var notes = [];
+  var User = require('../models/users').User;
 
   var note = function(id) {
     var d = new Date();
@@ -25,8 +24,34 @@ var Note = function() {
     return data;
   }
 
-  function getNotes() {
-    return notes;
+  function getNotes(req, res) {
+    User.findOne({
+      email : req.user.email
+    }, function(err, user) {
+      if (err) {
+        throw err;
+      }
+
+      if (user) {
+        var ns = user.notes;
+        if (req.query.ids) {
+          // only return the id and title
+          var nsIds = [];
+          for (var j = 0, jlen = ns.length; j < jlen; j++) {
+            nsIds.push({
+              id : ns[j]._id,
+              title : ns[j].title
+            });
+          }
+
+          ns = nsIds;
+        }
+
+        res.send(ns);
+      } else {
+        throw $.error('Unknown user.');
+      }
+    });
   }
   this.getNotes = getNotes;
 
@@ -42,7 +67,7 @@ var Note = function() {
     var n = new note(notes.length + 1);
     n.title += "-" + (notes.length + 1);
     _.assign(n, clearImmutableFields(data));
-    
+
     notes.push(n);
 
     return n;
@@ -62,24 +87,9 @@ var Note = function() {
 
 };
 
-var instance = new Note();
+var instance = new NotesRoute();
 
-exports.findAll = function(req, res) {
-  var ns = instance.getNotes();
-  if (req.query.ids) {
-    var nsIds = [];
-    for (var j = 0, jlen = ns.length; j < jlen; j++) {
-      nsIds.push({
-        id : ns[j].id,
-        title : ns[j].title
-      });
-    }
-
-    ns = nsIds;
-  }
-
-  res.send(ns);
-};
+exports.findAll = instance.getNotes;
 
 exports.findById = function(req, res) {
   res.send(instance.getNote(req.params.id));

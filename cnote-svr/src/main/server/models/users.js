@@ -1,13 +1,15 @@
 var Users = function() {
   var mongoose = require('mongoose');
   var hash = require('../util/hash');
+  var Notes = require('../models/notes').Notes;
 
   var UserSchema = new mongoose.Schema({
     firstName : String,
     lastName : String,
     email : String,
     salt : String,
-    hash : String
+    hash : String,
+    notes : [Notes.NotesSchema]
   // facebook:{
   // id: String,
   // email: String,
