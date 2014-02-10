@@ -43,16 +43,8 @@ var Users = function() {
     });
   };
 
-  function init() {
-    mongoose.connect("mongodb://localhost/cnote");
-    exports.User = mongoose.model('userauths', UserSchema);
-  }
-  this.init = init;
-
+   mongoose.connect("mongodb://localhost/cnote");
+   exports.User = mongoose.model('userauths', UserSchema);
 };
 
 var instance = new Users();
-
-exports.init = function() {
-  instance.init();
-};

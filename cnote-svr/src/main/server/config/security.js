@@ -1,5 +1,5 @@
 var Security = function() {
-  var dbUsers = require('../models/users');
+  var User = require('../models/users').User;
   var passport = require('passport');
   var LocalStrategy = require('passport-local').Strategy;
 
@@ -37,7 +37,7 @@ var Security = function() {
     });
 
     passport.deserializeUser(function(id, done) {
-      dbUsers.User.findOne({
+      User.findOne({
         _id : id
       }, function(err, user) {
         done(err, user);
@@ -48,7 +48,7 @@ var Security = function() {
       usernameField : 'email',
       passwordField : 'password'
     }, function(email, password, done) {
-      dbUsers.User.isValidUserPassword(email, password, done);
+      User.isValidUserPassword(email, password, done);
     }));
   }
 
@@ -58,7 +58,6 @@ var Security = function() {
   this.authenticate = authenticate;
 
   function init(app) {
-    dbUsers.init();
     initLocalStrategy();
     app.use(passport.initialize());
     app.use(passport.session());
