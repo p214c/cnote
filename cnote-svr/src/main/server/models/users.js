@@ -43,7 +43,6 @@ var Users = function() {
     });
   };
 
-   mongoose.connect("mongodb://localhost/cnote");
    exports.User = mongoose.model('userauths', UserSchema);
 };
 

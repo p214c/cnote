@@ -4,8 +4,9 @@ var fs = require('fs');
 var http = require('http');
 var https = require('https');
 
-var notes = require('./routes/notes');
+var db = require('./config/db');
 var security = require('./config/security');
+var notes = require('./routes/notesRoute');
 
 var application_root = __dirname;
 var webapp_root = path.join(application_root, 'public');
