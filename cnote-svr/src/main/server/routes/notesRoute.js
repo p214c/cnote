@@ -31,21 +31,16 @@ var NotesRoute = function() {
 
 	}
 
-	function queryHandler(err, user, data) {
-		if (err) {
-			throw err;
-		}
+	
+	(function notesHandler(request, response) {
+		return function queryResult(err, user) {
+			if (err) {
+				throw err;
+			}
 
-		if (user) {
-			data.success();
-		} else {
-			throw $.error('Unknown user.');
-		}
-	}
-
-	function notesResponse() {
+			if (user) {
 		var ns = user.notes;
-		if (req.query.ids) {
+		if (request.query.ids) {
 			// only return the id and title
 			var nsIds = [];
 			for (var j = 0, jlen = ns.length; j < jlen; j++) {
@@ -58,14 +53,19 @@ var NotesRoute = function() {
 			ns = nsIds;
 		}
 
-		this.response.send(ns);
+		response.send(ns);
+			} else {
+				throw $.error('Unknown user.');
+			}
 	}
+	})();
 
+	(function formHandler(result, handler) {
+		return result;
+	}
+	
 	function getNotes(req, res) {
-		queryUser(req.user.email, getNotesQueryHandler, {
-			success : notesResponse,
-			response : res
-		});
+		queryUser(req.user.email, notesHandler(req, res)));
 	}
 	this.getNotes = getNotes;
 
