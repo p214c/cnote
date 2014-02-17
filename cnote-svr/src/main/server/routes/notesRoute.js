@@ -25,9 +25,9 @@ var NotesRoute = function() {
     delete clone.id;
     delete clone.created;
     delete clone['last-modified'];
-    
+
     return clone;
-  } 
+  }
 
   function queryUser(email, handler) {
     User.findOne({
@@ -67,9 +67,11 @@ var NotesRoute = function() {
 
   function findUserNote(notes, id) {
     notes = notes || [];
-    for (var j = 0, jlen = notes.length; j < jlen; j++) {
-      if (notes[j]._id.equals(id)) {
-        return notes[j];
+    if (id) {
+      for (var j = 0, jlen = notes.length; j < jlen; j++) {
+        if (notes[j]._id.equals(id)) {
+          return notes[j];
+        }
       }
     }
 
@@ -110,15 +112,15 @@ var NotesRoute = function() {
       }
 
       if (user) {
-        var note =  findUserNote(user.notes, request.body._id);
+        var note = findUserNote(user.notes, request.body._id);
         if (note) {
-          _.assign(note, clearImmutableFields(request.body));
-        } else {}
+          _.assign(note, clearImmutableNoteFields(request.body));
+        } else {
           var title = request.body.title || 'title-' + user.notes.length;
           note = new createNote(title, request.body.data);
           user.notes.push(note);
         }
-      
+
         user.save(function(err, user, numberAffected) {
           if (err) {
             sendErrorResponse(response, err);
