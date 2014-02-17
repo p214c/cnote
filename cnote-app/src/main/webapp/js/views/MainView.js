@@ -67,7 +67,7 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
     function loadNote(note) {
       currentNote = note;
       $editor.removeClass('watermark');
-      $editor.html(note.data);
+      $editor.html(note.data || '');
     }
 
     function onNoteMenuItem(event) {
