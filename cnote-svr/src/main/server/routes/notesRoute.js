@@ -1,118 +1,156 @@
 var NotesRoute = function() {
-	var _ = require('lodash');
-	var User = require('../models/users').User;
+  var _ = require('lodash');
+  var User = require('../models/user').User;
+  var Note = require('../models/note').Note;
 
-	var note = function(id) {
-		var d = new Date();
+  function createNote(title, data) {
+    var d = new Date();
+    var note = new Note({
+      title : title,
+      data : data,
+      'last-modified' : d.getTime()
+    });
+    return note;
+  }
 
-		this.id = id;
-		this.title = 'title';
-		this.description = 'description';
-		this.cabinet = 'cabinet';
-		this.drawer = 'drawer';
-		this.data = 'data';
-		this.keywords = 'keywords';
-		this.created = d.getTime();
-		this['last-modified'] = d.getTime();
-	};
+  function sendErrorResponse(response, err) {
+    response.status(500).json({
+      message : 'Internal error',
+      error : err
+    });
+  }
 
-	function clearImmutableFields(data) {
-		delete data.id;
-		delete data.created;
-		delete data['last-modified'];
+  function queryUser(email, handler) {
+    User.findOne({
+      email : email
+    }, handler);
+    // .populate('notes').exec(handler);
 
-		return data;
-	}
+  }
 
-	function queryUser(email, handler) {
-		User.findOne({
-			email : email
-		}, handler);
+  function getNotesHandler(request, response) {
+    return function queryResult(err, user) {
+      if (err) {
+        sendErrorResponse(response, err);
+      }
 
-	}
+      if (user) {
+        var ns = user.notes;
+        if (request.query.ids) {
+          // only return the id and title
+          var nsIds = new Array();
+          for (var j = 0, jlen = ns.length; j < jlen; j++) {
+            nsIds.push({
+              id : ns[j]._id,
+              title : ns[j].title
+            });
+          }
 
-	
-	(function notesHandler(request, response) {
-		return function queryResult(err, user) {
-			if (err) {
-				throw err;
-			}
+          ns = nsIds;
+        }
 
-			if (user) {
-		var ns = user.notes;
-		if (request.query.ids) {
-			// only return the id and title
-			var nsIds = [];
-			for (var j = 0, jlen = ns.length; j < jlen; j++) {
-				nsIds.push({
-					id : ns[j]._id,
-					title : ns[j].title
-				});
-			}
+        response.send(ns);
+      } else {
+        sendErrorResponse(response, 'Unknown user');
+      }
+    };
+  }
 
-			ns = nsIds;
-		}
+  function getNotes(req, res) {
+    queryUser(req.user.email, getNotesHandler(req, res));
+  }
+  this.getNotes = getNotes;
 
-		response.send(ns);
-			} else {
-				throw $.error('Unknown user.');
-			}
-	}
-	})();
+  function getNoteHandler(request, response) {
+    return function queryResult(err, user) {
+      if (err) {
+        sendErrorResponse(response, err);
+      }
 
-	(function formHandler(result, handler) {
-		return result;
-	}
-	
-	function getNotes(req, res) {
-		queryUser(req.user.email, notesHandler(req, res)));
-	}
-	this.getNotes = getNotes;
+      if (user) {
+        // TODO query by user and note id instead of iterating the return set
+        var note = '';
+        var ns = user.notes;
+        for (var j = 0, jlen = ns.length; j < jlen; j++) {
+          if (ns[j]._id.equals(request.params.id)) {
+            note = ns[j];
+            break;
+          }
+        }
 
-	function getNote(id) {
-		if (!id) {
-			return '';
-		}
-		return notes[id - 1];
-	}
-	this.getNote = getNote;
+        response.send(note);
+      } else {
+        sendErrorResponse(response, 'Unknown user');
+      }
+    };
+  }
 
-	function addNote(data) {
-		var n = new note(notes.length + 1);
-		n.title += "-" + (notes.length + 1);
-		_.assign(n, clearImmutableFields(data));
+  function getNote(req, res) {
+    queryUser(req.user.email, getNoteHandler(req, res));
+  }
+  this.getNote = getNote;
 
-		notes.push(n);
+  function addNoteHandler(request, response) {
+    return function queryResult(err, user) {
+      if (err) {
+        sendErrorResponse(response, err);
+      }
 
-		return n;
-	}
-	this.addNote = addNote;
+      if (user) {
+        var note = new createNote('title-' + user.notes.length, request.body);
+        user.notes.push(note);
+        user.save(function(err, user, numberAffected) {
+          if (err) {
+            sendErrorResponse(response, err);
+          }
+          response.send(note);
+        });
+        // User.update({
+        // _id : user._id
+        // }, {
+        // $push : {
+        // notes : note
+        // }
+        // }, {
+        // upsert : true
+        // }, function(err, numberAffected, data) {
+        // if (err) {
+        // sendErrorResponse(response, err);
+        // }
+        // response.send(data);
+        // });
+      } else {
+        sendErrorResponse(response, 'Unknown user');
+      }
+    };
+  }
 
-	function updateNote(id, data) {
-		var n = notes[id - 1];
-		if (n) {
-			_.assign(n, clearImmutableFields(data));
-			n['last-modified'] = new Date().getTime();
-		}
+  function addNote(req, res) {
+    queryUser(req.user.email, addNoteHandler(req, res));
+  }
+  this.addNote = addNote;
 
-		return n;
-	}
-	this.updateNote = updateNote;
+  function updateNote(id, data) {
+    var n = notes[id - 1];
+    if (n) {
+      _.assign(n, clearImmutableFields(data));
+      n['last-modified'] = new Date().getTime();
+    }
+
+    return n;
+  }
+  this.updateNote = updateNote;
 
 };
 
 var instance = new NotesRoute();
 
 exports.findAll = instance.getNotes;
+exports.findById = instance.getNote;
+exports.add = instance.addNote;
+exports.update = instance.updateNote;
+//
+// function(req, res) {
+// res.send(instance.updateNote(req.params.id, req.body));
+// };
 
-exports.findById = function(req, res) {
-	res.send(instance.getNote(req.params.id));
-};
-
-exports.add = function(req, res) {
-	res.send(instance.addNote(req.body));
-};
-
-exports.update = function(req, res) {
-	res.send(instance.updateNote(req.params.id, req.body));
-};

@@ -1,7 +1,7 @@
-var Users = function() {
+var User = function() {
   var mongoose = require('mongoose');
   var hash = require('../util/hash');
-  var Notes = require('../models/notes').Notes;
+  var NoteSchema = require('../models/note').NoteSchema;
 
   var UserSchema = new mongoose.Schema({
     firstName : String,
@@ -9,7 +9,7 @@ var Users = function() {
     email : String,
     salt : String,
     hash : String,
-    notes : [Notes.NotesSchema]
+    notes : [NoteSchema]
   // facebook:{
   // id: String,
   // email: String,
@@ -48,4 +48,4 @@ var Users = function() {
    exports.User = mongoose.model('userauths', UserSchema);
 };
 
-var instance = new Users();
+var instance = new User();
