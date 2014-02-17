@@ -20,6 +20,15 @@ var NotesRoute = function() {
     });
   }
 
+  function clearImmutableNoteFields(data) {
+    var clone = _.cloneDeep(data);
+    delete clone.id;
+    delete clone.created;
+    delete clone['last-modified'];
+    
+    return clone;
+  } 
+
   function queryUser(email, handler) {
     User.findOne({
       email : email
@@ -56,6 +65,17 @@ var NotesRoute = function() {
     };
   }
 
+  function findUserNote(notes, id) {
+    notes = notes || [];
+    for (var j = 0, jlen = notes.length; j < jlen; j++) {
+      if (notes[j]._id.equals(id)) {
+        return notes[j];
+      }
+    }
+
+    return '';
+  }
+
   function getNotes(req, res) {
     queryUser(req.user.email, getNotesHandler(req, res));
   }
@@ -69,14 +89,7 @@ var NotesRoute = function() {
 
       if (user) {
         // TODO query by user and note id instead of iterating the return set
-        var note = '';
-        var ns = user.notes;
-        for (var j = 0, jlen = ns.length; j < jlen; j++) {
-          if (ns[j]._id.equals(request.params.id)) {
-            note = ns[j];
-            break;
-          }
-        }
+        var note = findUserNote(user.notes, request.params.id);
 
         response.send(note);
       } else {
@@ -90,15 +103,22 @@ var NotesRoute = function() {
   }
   this.getNote = getNote;
 
-  function addNoteHandler(request, response) {
+  function upsertNoteHandler(request, response) {
     return function queryResult(err, user) {
       if (err) {
         sendErrorResponse(response, err);
       }
 
       if (user) {
-        var note = new createNote('title-' + user.notes.length, request.body);
-        user.notes.push(note);
+        var note =  findUserNote(user.notes, request.body._id);
+        if (note) {
+          _.assign(note, clearImmutableFields(request.body));
+        } else {}
+          var title = request.body.title || 'title-' + user.notes.length;
+          note = new createNote(title, request.body.data);
+          user.notes.push(note);
+        }
+      
         user.save(function(err, user, numberAffected) {
           if (err) {
             sendErrorResponse(response, err);
@@ -125,21 +145,10 @@ var NotesRoute = function() {
     };
   }
 
-  function addNote(req, res) {
-    queryUser(req.user.email, addNoteHandler(req, res));
+  function upsertNote(req, res) {
+    queryUser(req.user.email, upsertNoteHandler(req, res));
   }
-  this.addNote = addNote;
-
-  function updateNote(id, data) {
-    var n = notes[id - 1];
-    if (n) {
-      _.assign(n, clearImmutableFields(data));
-      n['last-modified'] = new Date().getTime();
-    }
-
-    return n;
-  }
-  this.updateNote = updateNote;
+  this.upsertNote = upsertNote;
 
 };
 
@@ -147,10 +156,5 @@ var instance = new NotesRoute();
 
 exports.findAll = instance.getNotes;
 exports.findById = instance.getNote;
-exports.add = instance.addNote;
-exports.update = instance.updateNote;
-//
-// function(req, res) {
-// res.send(instance.updateNote(req.params.id, req.body));
-// };
-
+exports.add = instance.upsertNote;
+exports.update = instance.upsertNote;

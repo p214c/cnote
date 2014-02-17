@@ -6,7 +6,7 @@ var Note = function() {
     description : String,
     cabinet : String,
     drawer : String,
-    data : String,
+    stuff : String,
     keywords : String,
     created : {
       type : Date,
