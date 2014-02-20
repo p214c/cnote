@@ -15,12 +15,9 @@ button, .btn {
 }
 
 button.navbar-toggle {
-	height : 54px;
-	width : 75px;
-}
-
-.navbar-toggle .icon-bar {
-	width : 53px;
+	height : 48px;
+	width : 48px;
+	margin-top : 1px;
 }
 
 .body-wrapper {
@@ -96,6 +93,9 @@ button.navbar-toggle {
 
 .navbar-header .btn:first-child {
 	margin-left: 4px !important;
+	margin-right: 4px !important;
+	margin-top: 1px;
+	padding: 3px;
 	color: #fff;
 	border-color: #022f5a;
 	background-color: transparent;
@@ -152,4 +152,8 @@ div[data-role="editor-toolbar"] .caret {
   cursor: default;
   background-color: #033c73;
   border-bottom-color: transparent;
+}
+
+.button-group {
+	padding-top: 5px;
 }
