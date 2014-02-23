@@ -10,16 +10,6 @@ html,body {
 	height: 100%;
 }
 
-button, .btn {
-	font-size : 28px;
-}
-
-button.navbar-toggle {
-	height : 48px;
-	width : 48px;
-	margin-top : 1px;
-}
-
 .body-wrapper {
 	min-height: 100%;
 	height: auto !important;
@@ -92,10 +82,10 @@ button.navbar-toggle {
 }
 
 .navbar-header .btn:first-child {
-	margin-left: 4px !important;
-	margin-right: 4px !important;
-	margin-top: 1px;
-	padding: 3px;
+	margin-left: 15px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	padding:  0.45em;
 	color: #fff;
 	border-color: #022f5a;
 	background-color: transparent;
@@ -152,8 +142,4 @@ div[data-role="editor-toolbar"] .caret {
   cursor: default;
   background-color: #033c73;
   border-bottom-color: transparent;
-}
-
-.button-group {
-	padding-top: 5px;
 }
