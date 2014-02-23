@@ -85,10 +85,21 @@ html,body {
 	margin-left: 15px;
 	margin-top: 8px;
 	margin-bottom: 8px;
-	padding:  0.45em;
 	color: #fff;
 	border-color: #022f5a;
 	background-color: transparent;
+	padding-top: 0.3em;
+  padding-left: .5em;
+  padding-bottom: 0em;
+}
+
+.navbar-header .btn:first-child .fa-list-alt {
+  font-size: 2em;
+  margin-right: .2em;
+}
+
+.navbar-header .btn:first-child .caret {
+  padding-bottom: 1em;
 }
 
 .navbar-header .btn:first-child:hover,.navbar-header .btn:first-child:focus,.navbar-header .btn:first-child:active
