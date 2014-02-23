@@ -1,5 +1,6 @@
 define([ 'text!templates/main-header-container.htm', 'text!templates/main-header-bar.htm', 'text!templates/main-header-collapse.htm', 'text!templates/main-content-container.htm', 'text!templates/main-content-row-item.htm',
-    'text!templates/main-footer-container.htm', 'presenters/NotePresenter', 'bootstrap-wysiwyg', 'jquery-delayed', 'jquery-blockui' ], function(hdrContainer, hdrBar, hdrCollapse, contentContainer, contentRowItem, ftrContainer, NotePresenter) {
+    'text!templates/main-footer-container.htm', 'text!templates/main-footer-bar.htm', 'presenters/NotePresenter', 'bootstrap-wysiwyg', 'jquery-delayed', 'jquery-blockui' ], function(hdrContainer, hdrBar, hdrCollapse, contentContainer, contentRowItem,
+    ftrContainer, ftrBar, NotePresenter) {
   function MainView() {
     var me = this;
     var currentNote = '';
@@ -255,12 +256,10 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
     function addFooter(parent) {
       var $ftr = $(ftrContainer);
       parent.append($ftr);
+      var $ftrBar = $(ftrBar);
+      $ftr.append($ftrBar);
 
-      // TODO add Resource.get handling for i18n
-      var btnHtml = '<a class="btn btn-default btn-store" href="#">Store</a>';
-      var $storeButton = $(btnHtml);
-      $ftr.append($storeButton);
-
+      var $storeButton = $(".btn-store");
       $storeButton.on('click', storeNote);
     }
 

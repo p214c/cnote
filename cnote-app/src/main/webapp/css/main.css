@@ -25,7 +25,6 @@ html,body {
 .content-container {
 	height: 100%;
 	outline: none;
-	margin-top: 20px;
 }
 
 .row {
@@ -111,8 +110,13 @@ html,body {
 	float: right;
 }
 
-.dropdown-menu li {
-	margin-left: 4px;
+.navbar-header .dropdown-menu {
+  margin-top: -.5em;
+  margin-left: 1em;
+}
+
+.navbar-header .dropdown-menu li {
+	padding-left: 4px;
 }
 
 #voiceBtn {
@@ -151,6 +155,10 @@ div[data-role="editor-toolbar"] .caret {
 .navbar-header .dropdown-menu > li.active:focus {
   color: #555555;
   cursor: default;
-  background-color: #033c73;
+  background-color: #88C4FC;
   border-bottom-color: transparent;
+}
+
+.footer-container .btn-group {
+	margin-left: 15px;
 }
