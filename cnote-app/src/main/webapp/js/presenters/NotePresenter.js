@@ -51,8 +51,8 @@ define([ 'models/Note', 'jquery' ], function(Note) {
     this.getNote = getNote;
 
     function store(note, callbacks) {
-      var type = note.id ? 'PUT' : 'POST';
-      var url = '/notes' + (note.id ? '/' + note.id : '');
+      var type = note._id ? 'PUT' : 'POST';
+      var url = '/notes' + (note._id ? '/' + note._id : '');
       var success = callbacks ? callbacks.success : me.success;
       var failure = callbacks ? callbacks.failure : me.failure;
 
@@ -65,6 +65,19 @@ define([ 'models/Note', 'jquery' ], function(Note) {
       }).fail(failure);
     }
 
+    function remove(note, callbacks) {
+      var type = 'DELETE';
+      var url = '/notes/' + note._id;
+      var success = callbacks ? callbacks.success : me.success;
+      var failure = callbacks ? callbacks.failure : me.failure;
+
+      $.ajax({
+        type : type,
+        url : url,
+        success : success
+      }).fail(failure);
+    }
+    
     function storeNote(view, callbacks) {
       var data = view.getData();
       var note = data.note || new Note();
@@ -72,6 +85,13 @@ define([ 'models/Note', 'jquery' ], function(Note) {
       store(note, callbacks);
     }
     this.storeNote = storeNote;
+
+    function removeNote(view, callbacks) {
+      var data = view.getData();
+      var note = data.note;
+      remove(note, callbacks);
+    }
+    this.removeNote = removeNote;
   }
 
   return new NotePresenter();

@@ -22,7 +22,7 @@ var NotesRoute = function() {
 
   function clearImmutableNoteFields(data) {
     var clone = _.cloneDeep(data);
-    delete clone.id;
+    delete clone._id;
     delete clone.created;
     delete clone['last-modified'];
 
@@ -34,16 +34,20 @@ var NotesRoute = function() {
       email : email
     }, handler);
     // .populate('notes').exec(handler);
+  }
 
+  function queryUserNote(email, id, handler) {
+    User.findOne({
+      email : email,
+      'notes._id' : id
+    }, handler);
   }
 
   function getNotesHandler(request, response) {
     return function queryResult(err, user) {
       if (err) {
         sendErrorResponse(response, err);
-      }
-
-      if (user) {
+      } else if (user) {
         var ns = user.notes;
         if (request.query.ids) {
           // only return the id and title
@@ -65,34 +69,17 @@ var NotesRoute = function() {
     };
   }
 
-  function findUserNote(notes, id) {
-    notes = notes || [];
-    if (id) {
-      for (var j = 0, jlen = notes.length; j < jlen; j++) {
-        if (notes[j]._id.equals(id)) {
-          return notes[j];
-        }
-      }
-    }
-
-    return '';
-  }
-
-  function getNotes(req, res) {
-    queryUser(req.user.email, getNotesHandler(req, res));
+  function getNotes(request, res) {
+    queryUser(request.user.email, getNotesHandler(request, res));
   }
   this.getNotes = getNotes;
 
-  function getNoteHandler(request, response) {
+  function getNoteHandler(request, response, noteId) {
     return function queryResult(err, user) {
       if (err) {
         sendErrorResponse(response, err);
-      }
-
-      if (user) {
-        // TODO query by user and note id instead of iterating the return set
-        var note = findUserNote(user.notes, request.params.id);
-
+      } else if (user) {
+        var note = user.notes.id(noteId);
         response.send(note);
       } else {
         sendErrorResponse(response, 'Unknown user');
@@ -100,58 +87,102 @@ var NotesRoute = function() {
     };
   }
 
-  function getNote(req, res) {
-    queryUser(req.user.email, getNoteHandler(req, res));
+  function getNote(request, response) {
+    queryUserNote(request.user.email, request.params.id, getNoteHandler(request, response, request.params.id));
   }
   this.getNote = getNote;
 
-  function upsertNoteHandler(request, response) {
+  function updateUser(user, note, response) {
+    note['last-modified'] = new Date().getTime();
+
+    user.save(function(err, user, numberAffected) {
+      if (err) {
+        sendErrorResponse(response, err);
+      } else {
+        response.send(note);
+      }
+    });
+    // User.update({
+    // _id : user._id
+    // }, {
+    // $push : {
+    // notes : note
+    // }
+    // }, {
+    // upsert : true
+    // }, function(err, numberAffected, data) {
+    // if (err) {
+    // sendErrorResponse(response, err);
+    // }
+    // response.send(data);
+    // });
+  }
+
+  function addNoteHandler(request, response) {
     return function queryResult(err, user) {
       if (err) {
         sendErrorResponse(response, err);
-      }
-
-      if (user) {
-        var note = findUserNote(user.notes, request.body._id);
-        if (note) {
-          _.assign(note, clearImmutableNoteFields(request.body));
-        } else {
-          var title = request.body.title || 'title-' + user.notes.length;
-          note = new createNote(title, request.body.data);
-          user.notes.push(note);
-        }
-
-        user.save(function(err, user, numberAffected) {
-          if (err) {
-            sendErrorResponse(response, err);
-          }
-          response.send(note);
-        });
-        // User.update({
-        // _id : user._id
-        // }, {
-        // $push : {
-        // notes : note
-        // }
-        // }, {
-        // upsert : true
-        // }, function(err, numberAffected, data) {
-        // if (err) {
-        // sendErrorResponse(response, err);
-        // }
-        // response.send(data);
-        // });
+      } else if (user) {
+        var title = request.body.title || 'title-' + user.notes.length;
+        var note = new createNote(title, request.body.data);
+        user.notes.push(note);
+        updateUser(user, note, response);
       } else {
         sendErrorResponse(response, 'Unknown user');
       }
     };
   }
 
-  function upsertNote(req, res) {
-    queryUser(req.user.email, upsertNoteHandler(req, res));
+  function upsertNoteHandler(request, response, noteId) {
+    return function queryResult(err, user) {
+      if (err) {
+        sendErrorResponse(response, err);
+      } else if (user) {
+        // user note was found
+        var note = user.notes.id(noteId);
+        _.assign(note, clearImmutableNoteFields(request.body));
+        updateUser(user, note, response);
+      } else {
+        // didn't find the note for the user get user and add note
+        queryUser(request.user.email, addNoteHandler(request, response));
+      }
+    };
+  }
+
+  function upsertNote(request, res) {
+    queryUserNote(request.user.email, request.body._id, upsertNoteHandler(request, res, request.body._id));
   }
   this.upsertNote = upsertNote;
 
+  function removeNoteHandler(request, response, noteId) {
+    return function queryResult(err, user) {
+      if (err) {
+        sendErrorResponse(response, err);
+      } else if (user) {
+        var note = user.notes.id(noteId);
+        user.notes.pull(note._id);
+        user.save(function(err, numberAffected) {
+          if (err) {
+            sendErrorResponse(response, err);
+          } else if (numberAffected < 1) {
+            sendErrorResponse(response, 'Failed to remove note ' + note);
+          } else {
+            response.status(200).json({
+              message : 'Removed note ' + note._id,
+              note : note
+            });
+          }
+        });
+      } else {
+        sendErrorResponse(response, 'Could not find note ' + request.params.noteId);
+      }
+    };
+  }
+
+  function removeNote(request, res) {
+    queryUserNote(request.user.email, request.params.noteId, removeNoteHandler(request, res, request.params.noteId));
+  }
+  this.removeNote = removeNote;
 };
 
 var instance = new NotesRoute();
@@ -160,3 +191,4 @@ exports.findAll = instance.getNotes;
 exports.findById = instance.getNote;
 exports.add = instance.upsertNote;
 exports.update = instance.upsertNote;
+exports.remove = instance.removeNote;

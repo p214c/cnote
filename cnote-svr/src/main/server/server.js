@@ -83,6 +83,7 @@ app.get('/notes', security.isAuthenticated, notes.findAll);
 app.get('/notes/:id', security.isAuthenticated, notes.findById);
 app.post('/notes', security.isAuthenticated, notes.add);
 app.put('/notes/:id', security.isAuthenticated, notes.update);
+app.delete('/notes/:noteId', security.isAuthenticated, notes.remove);
 
 // self signed cert and key generated with openssl -
 // http://stackoverflow.com/questions/10175812/how-to-build-a-self-signed-certificate-with-openssl

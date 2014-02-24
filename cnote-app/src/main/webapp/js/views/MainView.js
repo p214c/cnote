@@ -95,12 +95,17 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
     }
 
     function storeNote() {
-      // TODO pass content view
       NotePresenter.storeNote(me, {
         success : getNotesMenuItems
       });
     }
 
+    function removeNote() {
+      NotePresenter.removeNote(me, {
+        success : getNotesMenuItems
+      });
+    }
+    
     function loginFailed(response) {
       // TODO: move css to css file
       $('form.navbar-form').block({
@@ -259,8 +264,9 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       var $ftrBar = $(ftrBar);
       $ftr.append($ftrBar);
 
-      var $storeButton = $(".btn-store");
-      $storeButton.on('click', storeNote);
+      $(".btn-store").on('click', storeNote);
+      $(".btn-remove").on('click', removeNote);
+      
     }
 
     /*
