@@ -105,7 +105,7 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
         success : getNotesMenuItems
       });
     }
-    
+
     function loginFailed(response) {
       // TODO: move css to css file
       $('form.navbar-form').block({
@@ -219,6 +219,17 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>' + '<strong>File upload error</strong> ' + msg + ' </div>').prependTo('#alerts');
     }
 
+    function toggleStoreButton() {
+      var $btnStoreSpan = $('.btn-store span');
+      if ($btnStoreSpan.hasClass('glyphicon glyphicon-floppy-saved')) {
+        $btnStoreSpan.removeClass('glyphicon glyphicon-floppy-saved');
+        $btnStoreSpan.addClass('glyphicon glyphicon-floppy-save');
+      } else {
+        $btnStoreSpan.removeClass('glyphicon glyphicon-floppy-save');
+        $btnStoreSpan.addClass('glyphicon glyphicon-floppy-saved');
+      }
+    }
+
     function watermark(editor) {
       var mark = 'Capture your thoughts here!';
 
@@ -235,6 +246,7 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       }).keyup(function() {
         var $div = $(this);
         $div.removeClass('watermark');
+        toggleStoreButton();
       }).text(mark);
     }
 
@@ -266,7 +278,7 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
 
       $(".btn-store").on('click', storeNote);
       $(".btn-remove").on('click', removeNote);
-      
+
     }
 
     /*
