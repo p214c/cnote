@@ -1,0 +1,9 @@
+{
+  "program": {
+    "portable": {
+      "pnacl-translate": {
+        "url": "cnote_encrypt.pexe"
+      }
+    }
+  }
+}
