@@ -2,6 +2,7 @@ var NotesRoute = function() {
   var _ = require('lodash');
   var User = require('../models/user').User;
   var Note = require('../models/note').Note;
+  var DB = require('../util/datastore').DB;
 
   function createNote(title, data) {
     var d = new Date();
@@ -39,7 +40,7 @@ var NotesRoute = function() {
   function queryUserNote(email, id, handler) {
     User.findOne({
       email : email,
-      'notes._id' : id
+      'notes._id' : id || DB.objectId()
     }, handler);
   }
 
@@ -70,7 +71,11 @@ var NotesRoute = function() {
   }
 
   function getNotes(request, res) {
-    queryUser(request.user.email, getNotesHandler(request, res));
+    try {
+      queryUser(request.user.email, getNotesHandler(request, res));
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
   this.getNotes = getNotes;
 
@@ -88,7 +93,11 @@ var NotesRoute = function() {
   }
 
   function getNote(request, response) {
-    queryUserNote(request.user.email, request.params.id, getNoteHandler(request, response, request.params.id));
+    try {
+      queryUserNote(request.user.email, request.params.id, getNoteHandler(request, response, request.params.id));
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
   this.getNote = getNote;
 
@@ -150,7 +159,11 @@ var NotesRoute = function() {
   }
 
   function upsertNote(request, res) {
-    queryUserNote(request.user.email, request.body._id, upsertNoteHandler(request, res, request.body._id));
+    try {
+      queryUserNote(request.user.email, request.body._id, upsertNoteHandler(request, res, request.body._id));
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
   this.upsertNote = upsertNote;
 
@@ -180,7 +193,11 @@ var NotesRoute = function() {
   }
 
   function removeNote(request, res) {
-    queryUserNote(request.user.email, request.params.noteId, removeNoteHandler(request, res, request.params.noteId));
+    try {
+      queryUserNote(request.user.email, request.params.noteId, removeNoteHandler(request, res, request.params.noteId));
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
   this.removeNote = removeNote;
 };
