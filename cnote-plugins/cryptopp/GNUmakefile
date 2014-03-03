@@ -22,8 +22,22 @@ ifeq ($(PREFIX),)
 PREFIX = /usr
 endif
 
+ifneq ($(NACL_SDK_ROOT),)
+VALID_TOOLCHAINS := newlib glibc pnacl linux
+include $(NACL_SDK_ROOT)/tools/common.mk
+
+PNACL_TC_PATH := $(abspath $(NACL_SDK_ROOT)/toolchain/$(OSNAME)_pnacl)
+CXX := $(PNACL_TC_PATH)/bin/pnacl-clang++
+
+WARNINGS := -Wno-long-long -Wall -Wswitch-enum -pedantic
+CXXFLAGS += -pthread -std=gnu++98 -DNO_OS_DEPENDENCE $(WARNINGS)
+
+LDLIBS += -L$(NACL_SDK_ROOT)/lib/pnacl/Release -lppapi_cpp -lppapi
+
+else
 ifeq ($(CXX),gcc)	# for some reason CXX is gcc on cygwin 1.1.4
 CXX = g++
+endif
 endif
 
 ifeq ($(ISX86),1)
