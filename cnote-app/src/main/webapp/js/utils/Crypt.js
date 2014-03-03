@@ -1,10 +1,22 @@
 define([ 'jquery' ], function() {
   function Crypt() {
-    function encrypt() {
-      CModule = document.getElementById('hello_tutorial');
-      updateStatus('SUCCESS');
+    var cnoteCrypt;
+
+    function getCrypt() {
+      if (!cnoteCrypt) {
+        var $cnoteCrypt = $('#encrypt-container');
+        $cnoteCrypt.on('message', handleMessage);
+
+        cnoteCrypt = $('#cnote_encrypt')[0];
+      }
+
+      return cnoteCrypt;
+    }
+    ;
+
+    function encrypt(value) {
       // Send a message to the Native Client module
-      HelloTutorialModule.postMessage('hello');
+      getCrypt().postMessage(value);
     }
     this.encrypt = encrypt;
 
@@ -12,11 +24,9 @@ define([ 'jquery' ], function() {
     // posts a message to the browser by calling PPB_Messaging.PostMessage()
     // (in C) or pp::Instance.PostMessage() (in C++). This implementation
     // simply displays the content of the message in an alert panel.
-    function handleMessage(message_event) {
-      alert(message_event.data);
+    function handleMessage(event) {
+      alert(event.data);
     }
-
-    $('encrypt_listener').bind('message', handleMessage, true);
   }
 
   return new Crypt();

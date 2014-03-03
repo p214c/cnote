@@ -1,6 +1,6 @@
 define([ 'text!templates/main-header-container.htm', 'text!templates/main-header-bar.htm', 'text!templates/main-header-collapse.htm', 'text!templates/main-content-container.htm', 'text!templates/main-content-row-item.htm',
-    'text!templates/main-footer-container.htm', 'text!templates/main-footer-bar.htm', 'text!templates/main-browser-encrypt.htm', 'presenters/NotePresenter', 'bootstrap-wysiwyg', 'jquery-delayed', 'jquery-blockui' ], function(hdrContainer, hdrBar, hdrCollapse, contentContainer, contentRowItem,
-    ftrContainer, ftrBar, encryptDiv, NotePresenter) {
+    'text!templates/main-footer-container.htm', 'text!templates/main-footer-bar.htm', 'text!templates/main-browser-encrypt.htm', 'presenters/NotePresenter', 'bootstrap-wysiwyg', 'jquery-delayed', 'jquery-blockui' ], function(hdrContainer, hdrBar, hdrCollapse,
+    contentContainer, contentRowItem, ftrContainer, ftrBar, encryptContainer, NotePresenter) {
   function MainView() {
     var me = this;
     var currentNote = '';
@@ -281,6 +281,12 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
 
     }
 
+    function addEncrypt(parent) {
+      // add the div to bring in chrome encrypt client
+      var $encrypt = $(encryptContainer);
+      parent.append($encrypt);
+    }
+
     /*
      * be sure the body container has a size set in pixels to allow content to fill
      */
@@ -310,10 +316,8 @@ define([ 'text!templates/main-header-container.htm', 'text!templates/main-header
       addHeader($bodyContainer);
       addContent($bodyContainer);
       addFooter($bodyContainer);
+      addEncrypt($bodyContainer);
 
-      // add the div to bring in chrome encrypt client
-      $bodyContainer.append($(encryptDiv));
-      
       setMainViewHeight();
       $(window).debounce('resize', setMainViewHeight);
     }
