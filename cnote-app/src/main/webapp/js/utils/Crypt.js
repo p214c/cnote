@@ -17,6 +17,9 @@ define([ 'jquery' ], function() {
     function encrypt(value) {
       // Send a message to the Native Client module
       getCrypt().postMessage(value);
+      
+      // TODO fix this to asynch promise
+      return value;
     }
     this.encrypt = encrypt;
 
