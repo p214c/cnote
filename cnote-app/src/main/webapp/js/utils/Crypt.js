@@ -1,25 +1,35 @@
-define([ 'jquery' ], function() {
+define([ 'lodash', 'jquery' ], function() {
   function Crypt() {
     var cnoteCrypt;
 
+    var waiting = {};
+
     function getCrypt() {
       if (!cnoteCrypt) {
-        var $cnoteCrypt = $('#encrypt-container');
-        $cnoteCrypt.on('message', handleMessage);
+        var cnoteCryptDiv = $('#encrypt-container')[0];
+        cnoteCryptDiv.addEventListener('message', handleMessage, true);
+        // $cnoteCrypt.bind('message', handleMessage);
 
         cnoteCrypt = $('#cnote_encrypt')[0];
       }
 
       return cnoteCrypt;
     }
-    ;
 
     function encrypt(value) {
-      // Send a message to the Native Client module
+      // set an id to key the message processing on return
+      var deferred = $.Deferred();
+      var msgId = _.uniqueId();
+      value = msgId + '||||' + value;
+      waiting[msgId] = {
+        deferred : deferred,
+        value : value
+      };
+
+      // send encrypt message to the Native Client module
       getCrypt().postMessage(value);
-      
-      // TODO fix this to asynch promise
-      return value;
+
+      return deferred.promise();
     }
     this.encrypt = encrypt;
 
@@ -28,7 +38,27 @@ define([ 'jquery' ], function() {
     // (in C) or pp::Instance.PostMessage() (in C++). This implementation
     // simply displays the content of the message in an alert panel.
     function handleMessage(event) {
-      alert(event.data);
+      var data = event.data || "";
+      var response = data.split('||||');
+      if (response.length < 2) {
+        console.log('error parsing id and encrypted value from encrypt plugin response');
+      } else {
+        var msgId = response[0];
+        try {
+          var entry = waiting[msgId];
+          if (entry) {
+            // TODO remove defaulting to original message. if encrypt failed, bail
+            var value = response[1] || entry.value;
+            entry.deferred.resolve(value);
+          } else {
+            console.log('error finding waiting request with id ' + msgId);
+          }
+        } finally {
+          if (waiting[msgId]) {
+            delete waiting[msgId];
+          }
+        }
+      }
     }
   }
 

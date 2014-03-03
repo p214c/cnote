@@ -36,10 +36,10 @@ require.config({
     // wysihtml5 : [ 'jquery' ],
     // 'bootstrap-wysihtml5' : [ 'jquery', 'bootstrap', 'wysihtml5' ],
     'bootstrap-wysiwyg' : [ 'jquery', 'jquery-hotkeys', 'bootstrap' ],
+    'deps' : [ 'lodash', 'jquery' ],
     'jquery-blockui' : [ 'jquery' ]
   // backbone: {
   // // Depends on underscore/lodash and jQuery
-  // 'deps': ['underscore', 'jquery'],
   // // Exports the global window.Backbone object
   // 'exports': 'Backbone'
   // },

@@ -2,7 +2,7 @@ define([ 'models/Note', 'utils/Crypt', 'jquery' ], function(Note, Crypt) {
   // TODO encrypt all payloads locally when plugin and user key are available
   function NotePresenter() {
     var me = this;
-    
+
     me.success = '';
     me.failure = function(jqXHR, error) {
       alert(error + '\n\t' + jqXHR.responseText);
@@ -78,12 +78,14 @@ define([ 'models/Note', 'utils/Crypt', 'jquery' ], function(Note, Crypt) {
         success : success
       }).fail(failure);
     }
-    
+
     function storeNote(view, callbacks) {
       var data = view.getData();
-      var note = data.note || new Note();
-      note.data = Crypt.encrypt(data.value);
-      store(note, callbacks);
+      Crypt.encrypt(data.value).then(function(value) {
+        var note = data.note || new Note();
+        note.data = value;
+        store(note, callbacks);
+      });
     }
     this.storeNote = storeNote;
 
