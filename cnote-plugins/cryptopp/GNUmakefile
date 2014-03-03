@@ -33,7 +33,8 @@ WARNINGS := -Wno-long-long -Wall -Wswitch-enum -pedantic
 CXXFLAGS += -pthread -std=gnu++98 -DNO_OS_DEPENDENCE $(WARNINGS)
 
 LDLIBS += -L$(NACL_SDK_ROOT)/lib/pnacl/Release -lppapi_cpp -lppapi
-
+AR := $(PNACL_TC_PATH)/bin/pnacl-ar 
+RANLIB := $(PNACL_TC_PATH)/bin/pnacl-ranlib
 else
 ifeq ($(CXX),gcc)	# for some reason CXX is gcc on cygwin 1.1.4
 CXX = g++

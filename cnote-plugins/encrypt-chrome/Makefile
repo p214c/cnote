@@ -32,9 +32,10 @@ RM := $(OSHELPERS) rm
 PNACL_TC_PATH := $(abspath $(NACL_SDK_ROOT)/toolchain/$(OSNAME)_pnacl)
 PNACL_CXX := $(PNACL_TC_PATH)/bin/pnacl-clang++
 PNACL_FINALIZE := $(PNACL_TC_PATH)/bin/pnacl-finalize
-CXXFLAGS := -I$(NACL_SDK_ROOT)/include -I$(CRYPTOPP_ROOT)
+CXXFLAGS := -I$(NACL_SDK_ROOT)/include
 LDFLAGS := -L$(NACL_SDK_ROOT)/lib/pnacl/Release -lppapi_cpp -lppapi
-CRYPTOPP_LDFLAGS := -L$(LIB_PATH) -llibcryptopp
+CRYPTOPP_CXXFLAGS :=  -I$(CRYPTOPP_ROOT)
+CRYPTOPP_LDFLAGS := -L$(LIB_PATH) -lcryptopp
 #
 # Disable DOS PATH warning when using Cygwin based tools Windows
 #
@@ -52,7 +53,7 @@ cnote_encrypt.bc: cnote_encrypt.cc
 	$(PNACL_CXX) -o $@ $< -O2 $(CXXFLAGS) $(LDFLAGS)
 
 crypt.bc: crypt.cc
-	$(PNACL_CXX) -o $@ $< -O2 $(CXXFLAGS) $(CRYPTOPP_LDFLAGS)
+	$(PNACL_CXX) -o $@ $< -O2 $(CRYPTOPP_CXXFLAGS) $(CRYPTOPP_LDFLAGS)
 
 cnote_encrypt.pexe: cnote_encrypt.bc crypt.bc
 	$(PNACL_FINALIZE) -o $@ $<
