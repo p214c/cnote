@@ -47,15 +47,15 @@ export CYGWIN
 all: cnote_encrypt.pexe
 
 clean:
-	$(RM) cnote_encrypt.pexe cnote_encrypt.bc crypt.bc
+	$(RM) crypt.o cnote_encrypt.bc cnote_encrypt.pexe
 
-crypt.bc: crypt.cc
+crypt.o: crypt.cc
 	$(PNACL_CXX) -c -o $@ $< -O2 $(CXXFLAGS) $(LDFLAGS)
 
 cnote_encrypt.bc: cnote_encrypt.cc
-	$(PNACL_CXX) -o $@ $< -O2 $(CXXFLAGS) $(LDFLAGS) crypt.bc
+	$(PNACL_CXX) -o $@ $< -O2 $(CXXFLAGS) crypt.o $(LDFLAGS)
 
-cnote_encrypt.pexe: crypt.bc cnote_encrypt.bc
+cnote_encrypt.pexe: crypt.o cnote_encrypt.bc
 	$(PNACL_FINALIZE) -o $@ $<
 
 
