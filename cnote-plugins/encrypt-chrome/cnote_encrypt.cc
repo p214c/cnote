@@ -27,6 +27,7 @@
 #include "ppapi/cpp/instance.h"
 #include "ppapi/cpp/module.h"
 #include "ppapi/cpp/var.h"
+#include "include/crypt.h"
 
 /// The Instance class.  One of these exists for each instance of your NaCl
 /// module on the web page.  The browser will ask the Module object to create
@@ -44,6 +45,7 @@ public:
 	explicit CnoteEncryptInstance(PP_Instance instance) :
 			pp::Instance(instance) {
 	}
+
 	virtual ~CnoteEncryptInstance() {
 	}
 
@@ -52,14 +54,24 @@ public:
 	/// Array or Dictionary. Please see the pp:Var documentation for more details.
 	/// @param[in] var_message The message posted by the browser.
 	virtual void HandleMessage(const pp::Var& var_message) {
+
 		if (!var_message.is_string()) {
 			PostMessage(pp::Var("ERROR: unsupported message type received."));
 			return;
 		}
 
+		// TODO create a header that includes these member declarations and instantiate once
+		crypt::Crypt* cipher = new crypt::Crypt();
+		std::string ENCRYPT_PREFIX = "encrypted||||";
 		std::string message = var_message.AsString();
+		if (message.find(ENCRYPT_PREFIX) == 0) {
+			message = cipher->decrypt(message.substr(ENCRYPT_PREFIX.size()));
+		} else {
+			message = "encrypted||||" + cipher->encrypt(message);
+		}
+
 		pp::Var var_reply = pp::Var(message);
-		PostMessage (var_reply);
+		PostMessage(var_reply);
 	}
 };
 

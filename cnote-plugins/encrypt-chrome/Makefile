@@ -15,7 +15,9 @@
 THIS_MAKEFILE := $(abspath $(lastword $(MAKEFILE_LIST)))
 NACL_SDK_ROOT ?= $(abspath $(dir $(THIS_MAKEFILE))../..)
 CRYPTOPP_ROOT ?= $(abspath $(dir $(THIS_MAKEFILE))../cryptopp)
+
 LIB_PATH ?= $(abspath $(dir $(THIS_MAKEFILE))/lib)
+INC_PATH ?= $(abspath $(dir $(THIS_MAKEFILE))/include)
 
 # Project Build flags
 WARNINGS := -Wno-long-long -Wall -Wswitch-enum -pedantic -Werror
@@ -32,10 +34,8 @@ RM := $(OSHELPERS) rm
 PNACL_TC_PATH := $(abspath $(NACL_SDK_ROOT)/toolchain/$(OSNAME)_pnacl)
 PNACL_CXX := $(PNACL_TC_PATH)/bin/pnacl-clang++
 PNACL_FINALIZE := $(PNACL_TC_PATH)/bin/pnacl-finalize
-CXXFLAGS := -I$(NACL_SDK_ROOT)/include
-LDFLAGS := -L$(NACL_SDK_ROOT)/lib/pnacl/Release -lppapi_cpp -lppapi
-CRYPTOPP_CXXFLAGS :=  -I$(CRYPTOPP_ROOT)
-CRYPTOPP_LDFLAGS := -L$(LIB_PATH) -lcryptopp
+CXXFLAGS := -I$(NACL_SDK_ROOT)/include -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
+LDFLAGS := -L$(NACL_SDK_ROOT)/lib/pnacl/Release -L$(LIB_PATH) -lppapi_cpp -lppapi -lcryptopp 
 #
 # Disable DOS PATH warning when using Cygwin based tools Windows
 #
@@ -49,13 +49,13 @@ all: cnote_encrypt.pexe
 clean:
 	$(RM) cnote_encrypt.pexe cnote_encrypt.bc crypt.bc
 
-cnote_encrypt.bc: cnote_encrypt.cc
-	$(PNACL_CXX) -o $@ $< -O2 $(CXXFLAGS) $(LDFLAGS)
-
 crypt.bc: crypt.cc
-	$(PNACL_CXX) -o $@ $< -O2 $(CRYPTOPP_CXXFLAGS) $(CRYPTOPP_LDFLAGS)
+	$(PNACL_CXX) -c -o $@ $< -O2 $(CXXFLAGS) $(LDFLAGS)
 
-cnote_encrypt.pexe: cnote_encrypt.bc crypt.bc
+cnote_encrypt.bc: cnote_encrypt.cc
+	$(PNACL_CXX) -o $@ $< -O2 $(CXXFLAGS) $(LDFLAGS) crypt.bc
+
+cnote_encrypt.pexe: crypt.bc cnote_encrypt.bc
 	$(PNACL_FINALIZE) -o $@ $<
 
 
