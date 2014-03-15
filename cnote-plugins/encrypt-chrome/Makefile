@@ -44,7 +44,7 @@ export CYGWIN
 
 
 # Declare the ALL target first, to make the 'all' target the default build
-all: cnote_encrypt.pexe
+all: crypt.o cnote_encrypt.pexe
 
 clean:
 	$(RM) crypt.o cnote_encrypt.bc cnote_encrypt.pexe
@@ -55,7 +55,7 @@ crypt.o: crypt.cc
 cnote_encrypt.bc: cnote_encrypt.cc
 	$(PNACL_CXX) -o $@ $< -O2 $(CXXFLAGS) crypt.o $(LDFLAGS)
 
-cnote_encrypt.pexe: crypt.o cnote_encrypt.bc
+cnote_encrypt.pexe: cnote_encrypt.bc
 	$(PNACL_FINALIZE) -o $@ $<
 
 

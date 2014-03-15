@@ -64,8 +64,8 @@ public:
 		crypt::Crypt* cipher = new crypt::Crypt();
 		std::string ENCRYPT_PREFIX = "encrypted||||";
 		std::string message = var_message.AsString();
-		if (message.find(ENCRYPT_PREFIX) == 0) {
-			message = cipher->decrypt(message.substr(ENCRYPT_PREFIX.size()));
+		if (message.find(ENCRYPT_PREFIX) > 0) {
+			message = cipher->decrypt(message.substr(message.find(ENCRYPT_PREFIX) + ENCRYPT_PREFIX.size()));
 		} else {
 			message = "encrypted||||" + cipher->encrypt(message);
 		}
