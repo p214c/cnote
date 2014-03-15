@@ -30,6 +30,7 @@ GETOS := python $(NACL_SDK_ROOT)/tools/getos.py
 OSHELPERS = python $(NACL_SDK_ROOT)/tools/oshelpers.py
 OSNAME := $(shell $(GETOS))
 RM := $(OSHELPERS) rm
+MKDIR_P = $(OSHELPERS) mkdir -p
 
 PNACL_TC_PATH := $(abspath $(NACL_SDK_ROOT)/toolchain/$(OSNAME)_pnacl)
 PNACL_CXX := $(PNACL_TC_PATH)/bin/pnacl-clang++
@@ -42,21 +43,30 @@ LDFLAGS := -L$(NACL_SDK_ROOT)/lib/pnacl/Release -L$(LIB_PATH) -lppapi_cpp -lppap
 CYGWIN ?= nodosfilewarning
 export CYGWIN
 
+SRC_DIR := $(abspath ./src/main/cpp)
+OUT_DIR := $(abspath ./target)
+
+.PHONY: outdir
 
 # Declare the ALL target first, to make the 'all' target the default build
 all: crypt.o cnote_encrypt.pexe
+Debug: OUT_DIR:=$(OUT_DIR)/Debug
+Debug: crypt.o cnote_encrypt.pexe
 
 clean:
-	$(RM) crypt.o cnote_encrypt.bc cnote_encrypt.pexe
+	$(RM) -rf crypt.o cnote_encrypt.bc cnote_encrypt.pexe $(abspath ./target/*)
 
-crypt.o: crypt.cc
-	$(PNACL_CXX) -c -o $@ $< -O2 $(CXXFLAGS) $(LDFLAGS)
+crypt.o: $(SRC_DIR)/crypt.cc
+	$(MKDIR_P) $(OUT_DIR)
+	$(PNACL_CXX) -c -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS) $(LDFLAGS)
 
-cnote_encrypt.bc: cnote_encrypt.cc
-	$(PNACL_CXX) -o $@ $< -O2 $(CXXFLAGS) crypt.o $(LDFLAGS)
+cnote_encrypt.bc: $(SRC_DIR)/cnote_encrypt.cc
+	$(MKDIR_P) $(OUT_DIR)
+	$(PNACL_CXX) -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS) $(OUT_DIR)/crypt.o $(LDFLAGS)
 
-cnote_encrypt.pexe: cnote_encrypt.bc
-	$(PNACL_FINALIZE) -o $@ $<
+cnote_encrypt.pexe: $(OUT_DIR)/cnote_encrypt.bc
+	$(MKDIR_P) $(OUT_DIR)
+	$(PNACL_FINALIZE) -o $(OUT_DIR)/$@ $<
 
 
 #
