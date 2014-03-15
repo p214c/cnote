@@ -4,21 +4,23 @@
 
 #include "../include/crypt.h"
 
-namespace crypt {
+using namespace std;
+using namespace CryptoPP;
+using namespace crypto;
 
-std::string Crypt::encrypt(std::string encipher) {
+string Crypt::encrypt(string encipher) {
 	//
 	// Encipher text
 	//
-	std::string enciphered;
+	string enciphered;
 
-	CryptoPP::AES::Encryption aesEncryption(key,
-			CryptoPP::AES::DEFAULT_KEYLENGTH);
-	CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption(aesEncryption,
+	AES::Encryption aesEncryption(key,
+			AES::DEFAULT_KEYLENGTH);
+	CBC_Mode_ExternalCipher::Encryption cbcEncryption(aesEncryption,
 			iv);
 
-	CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption,
-			new CryptoPP::StringSink(enciphered));
+	StreamTransformationFilter stfEncryptor(cbcEncryption,
+			new StringSink(enciphered));
 	stfEncryptor.Put(reinterpret_cast<const unsigned char*>(encipher.c_str()),
 			encipher.length() + 1);
 	stfEncryptor.MessageEnd();
@@ -26,26 +28,24 @@ std::string Crypt::encrypt(std::string encipher) {
 	return enciphered;
 }
 
-std::string Crypt::decrypt(std::string decipher) {
+string Crypt::decrypt(string decipher) {
 	//
 	// Decipher Text
 	//
-	std::string deciphered;
+	string deciphered;
 
-	CryptoPP::AES::Decryption aesDecryption(key,
-			CryptoPP::AES::DEFAULT_KEYLENGTH);
-	CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption,
+	AES::Decryption aesDecryption(key,
+			AES::DEFAULT_KEYLENGTH);
+	CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption,
 			iv);
 
-	CryptoPP::StreamTransformationFilter stfDecryptor(cbcDecryption,
-			new CryptoPP::StringSink(deciphered));
+	StreamTransformationFilter stfDecryptor(cbcDecryption,
+			new StringSink(deciphered));
 	stfDecryptor.Put(reinterpret_cast<const unsigned char*>(decipher.c_str()),
 			decipher.size());
 	stfDecryptor.MessageEnd();
 
 	return deciphered;
-}
-
 }
 
 #endif
