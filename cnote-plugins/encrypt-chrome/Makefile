@@ -64,9 +64,9 @@ cnote_encrypt.bc: $(SRC_DIR)/cnote_encrypt.cc
 	$(MKDIR_P) $(OUT_DIR)
 	$(PNACL_CXX) -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS) $(OUT_DIR)/crypt.o $(LDFLAGS)
 
-cnote_encrypt.pexe: $(OUT_DIR)/cnote_encrypt.bc
+cnote_encrypt.pexe: cnote_encrypt.bc
 	$(MKDIR_P) $(OUT_DIR)
-	$(PNACL_FINALIZE) -o $(OUT_DIR)/$@ $<
+	$(PNACL_FINALIZE) -o $(OUT_DIR)/$@ $(OUT_DIR)/$<
 
 
 #
