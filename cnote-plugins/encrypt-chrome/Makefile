@@ -67,7 +67,7 @@ crypt.o: $(SRC_DIR)/crypt.cc
 
 crypt.exe : $(SRC_DIR)/crypt.cc
 	$(MKDIR_P) $(OUT_DIR)
-	gcc -o $(OUT_DIR)/$@ $< -O2 -I$(INC_PATH) -I$(CRYPTOPP_ROOT) -L$(LIB_PATH) -lcryptopp 
+	gcc -o $(OUT_DIR)/$@ $< -O2 -I$(INC_PATH) -I$(CRYPTOPP_ROOT) -L$(LIB_PATH) -lgnucryptopp 
 
 cnote_encrypt.bc: $(SRC_DIR)/cnote_encrypt.cc
 	$(MKDIR_P) $(OUT_DIR)
