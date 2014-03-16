@@ -21,9 +21,8 @@ LIB_PATH ?= $(abspath $(dir $(THIS_MAKEFILE))/lib)
 INC_PATH ?= $(abspath $(dir $(THIS_MAKEFILE))/include)
 
 # Project Build flags
-WARNINGS := -Wno-long-long -Wall -Wswitch-enum -pedantic -Werror
+WARNINGS := -Wno-long-long -Wall -Wswitch-enum -pedantic
 CXXFLAGS := -pthread -std=gnu++98 $(WARNINGS)
-
 
 #
 # Compute tool paths
@@ -37,7 +36,7 @@ MKDIR_P := $(OSHELPERS) mkdir -p
 PNACL_TC_PATH := $(abspath $(NACL_SDK_ROOT)/toolchain/$(OSNAME)_pnacl)
 PNACL_CXX = $(PNACL_TC_PATH)/bin/pnacl-clang++
 PNACL_FINALIZE := $(PNACL_TC_PATH)/bin/pnacl-finalize
-CXXFLAGS = -I$(NACL_SDK_ROOT)/include -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
+CXXFLAGS += -I$(NACL_SDK_ROOT)/include -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
 LDFLAGS = -L$(NACL_SDK_ROOT)/lib/pnacl/$(CONFIGURATION) -L$(LIB_PATH) -lppapi_cpp -lppapi -lcryptopp 
 #
 # Disable DOS PATH warning when using Cygwin based tools Windows
@@ -53,7 +52,7 @@ OUT_DIR := $(abspath ./target)/$(CONFIGURATION)
 all: cnote_encrypt.pexe
 
 crypto:	PNACL_CXX := g++
-crypto:	CXXFLAGS := -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
+crypto:	CXXFLAGS := -g -pthread -std=gnu++98 $(WARNINGS) -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
 crypto: LDFLAGS := -L$(LIB_PATH) -lgnucryptopp 
 crypto: crypt.exe
 

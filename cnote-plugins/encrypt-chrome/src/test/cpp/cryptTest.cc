@@ -3,33 +3,47 @@
 using namespace crypto;
 
 int main() {
-	std::cout << "Starting";
+	std::cout << "Starting" << std::endl;
 
-	crypto::Crypt* cipher = new crypto::Crypt();
+	std::string ENCRYPT_PREFIX = "encrypted||||";
+	int ENCRYPT_PREFIX_LEN = ENCRYPT_PREFIX.size();
 
-	std::string ENCRYPT_PREFIX = "\nencrypted||||";
+	std::string messages[] = { "encrypt this!", "3||||test", "", ENCRYPT_PREFIX
+			+ "1||||\ttab\nnewline" };
 
-	std::string messages[] = { "encrypt this!", "3||||test", "", NULL };
-
-	for (int idx = 0; idx < 4; idx++) {
-		std::string message = messages[idx];
-		std::cout << "\nBefore encrypt: " + message;
-		message = "encrypted||||" + cipher->encrypt(message);
-		std::cout << "\nEncrypted: " + message;
-
-		if (message.find(ENCRYPT_PREFIX) > 0) {
-			std::cout << "\nBefore decrypt: " + message;
-			message = cipher->decrypt(
-					message.substr(
-							message.find(ENCRYPT_PREFIX)
-									+ ENCRYPT_PREFIX.size()));
-			std::cout << "\nDecrypted: " + message;
-		} else {
-			std::cout << "\nDidn't detect encryption: " + message;
+	for (int idx = 0, len = sizeof(messages) / sizeof(std::string); idx < len;
+			idx++) {
+		crypto::Crypt* cipher = new crypto::Crypt();
+		if (cipher == NULL) {
+			std::cout << "ERROR: failed to instantiate cipher!" << std::endl;
+			continue;
 		}
 
-		std::cout << "\nNext\n";
+		std::string message = messages[idx];
+		if (message.empty()) {
+			std::cout << "INFO: detected empty message." << std::endl;
+			continue;
+		}
+
+		std::cout << "Before encrypt: " + message << std::endl;
+
+		message = ENCRYPT_PREFIX + cipher->encrypt(message);
+		std::cout << "Encrypted: " + message << std::endl;
+
+		int prefixPos = message.find_first_of(ENCRYPT_PREFIX);
+		if (prefixPos == 0) {
+			std::cout << "Before decrypt: " + message << std::endl;
+			int prefixLen = message.find_first_of(ENCRYPT_PREFIX)
+					+ ENCRYPT_PREFIX_LEN;
+			message = cipher->decrypt(message.substr(prefixLen));
+			std::cout << "Decrypted: " + message << std::endl;
+		} else {
+			std::cout << "Didn't detect encryption: " + message << std::endl;
+		}
+
+		std::cout << "Next" << std::endl;
 		delete cipher;
+		cipher = NULL;
 	}
 
 	return 0;
