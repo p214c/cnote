@@ -15,7 +15,7 @@
 THIS_MAKEFILE := $(abspath $(lastword $(MAKEFILE_LIST)))
 NACL_SDK_ROOT ?= $(abspath $(dir $(THIS_MAKEFILE))../..)
 CRYPTOPP_ROOT ?= $(abspath $(dir $(THIS_MAKEFILE))../cryptopp)
-CONFIGURATION := Release
+CONFIGURATION = Release
 
 LIB_PATH ?= $(abspath $(dir $(THIS_MAKEFILE))/lib)
 INC_PATH ?= $(abspath $(dir $(THIS_MAKEFILE))/include)
@@ -29,16 +29,16 @@ CXXFLAGS := -pthread -std=gnu++98 $(WARNINGS)
 # Compute tool paths
 #
 GETOS := python $(NACL_SDK_ROOT)/tools/getos.py
-OSHELPERS = python $(NACL_SDK_ROOT)/tools/oshelpers.py
+OSHELPERS := python $(NACL_SDK_ROOT)/tools/oshelpers.py
 OSNAME := $(shell $(GETOS))
 RM := $(OSHELPERS) rm
-MKDIR_P = $(OSHELPERS) mkdir -p
+MKDIR_P := $(OSHELPERS) mkdir -p
 
 PNACL_TC_PATH := $(abspath $(NACL_SDK_ROOT)/toolchain/$(OSNAME)_pnacl)
-PNACL_CXX := $(PNACL_TC_PATH)/bin/pnacl-clang++
+PNACL_CXX = $(PNACL_TC_PATH)/bin/pnacl-clang++
 PNACL_FINALIZE := $(PNACL_TC_PATH)/bin/pnacl-finalize
-CXXFLAGS := -I$(NACL_SDK_ROOT)/include -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
-LDFLAGS := -L$(NACL_SDK_ROOT)/lib/pnacl/$(CONFIGURATION) -L$(LIB_PATH) -lppapi_cpp -lppapi -lcryptopp 
+CXXFLAGS = -I$(NACL_SDK_ROOT)/include -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
+LDFLAGS = -L$(NACL_SDK_ROOT)/lib/pnacl/$(CONFIGURATION) -L$(LIB_PATH) -lppapi_cpp -lppapi -lcryptopp 
 #
 # Disable DOS PATH warning when using Cygwin based tools Windows
 #
@@ -47,19 +47,15 @@ export CYGWIN
 
 SRC_DIR := $(abspath ./src/main/cpp)
 TST_DIR := $(abspath ./src/test/cpp)
-OUT_DIR := $(abspath ./target)
-
-.PHONY: outdir
+OUT_DIR := $(abspath ./target)/$(CONFIGURATION)
 
 # Declare the ALL target first, to make the 'all' target the default build
-all: OUT_DIR:=$(OUT_DIR)/$(CONFIGURATION)
-all: crypt.o cnote_encrypt.pexe
+all: cnote_encrypt.pexe
 
-crypt: OUT_DIR:=$(OUT_DIR)/$(CONFIGURATION)
-crypt: PNACL_CXX := g++
-crypt: CXXFLAGS := -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
-crypt: LDFLAGS := -L$(LIB_PATH) -lgnucryptopp 
-crypt: crypt.o crypt.exe
+crypto:	PNACL_CXX := g++
+crypto:	CXXFLAGS := -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
+crypto: LDFLAGS := -L$(LIB_PATH) -lgnucryptopp 
+crypto: crypt.exe
 
 clean:
 	$(RM) -rf crypt.o cnote_encrypt.bc cnote_encrypt.pexe $(abspath ./target/*)
@@ -68,17 +64,17 @@ crypt.o: $(SRC_DIR)/crypt.cc
 	$(MKDIR_P) $(OUT_DIR)
 	$(PNACL_CXX) -c -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS)
 
-cnote_encrypt.bc: $(SRC_DIR)/cnote_encrypt.cc
+cnote_encrypt.bc: $(SRC_DIR)/cnote_encrypt.cc crypt.o 
 	$(PNACL_CXX) -o $(OUT_DIR)/$@ $< $(OUT_DIR)/crypt.o -O2 $(CXXFLAGS) $(LDFLAGS)
 
 cnote_encrypt.pexe: cnote_encrypt.bc
-	$(PNACL_FINALIZE) -o $(OUT_DIR)/$@ $(OUT_DIR)/$<
+	$(PNACL_FINALIZE) -o $(OUT_DIR)/$@ $(OUT_DIR)/$< $(OUT_DIR)/crypt.o
 
 cryptTest.o: $(TST_DIR)/cryptTest.cc
 	$(PNACL_CXX) -c -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS)
 
-crypt.exe: cryptTest.o
-	$(PNACL_CXX) -o $(OUT_DIR)/$@ $(OUT_DIR)/$< $(OUT_DIR)/crypt.o $(LDFLAGS)
+crypt.exe: crypt.o cryptTest.o 
+	$(PNACL_CXX) -o $(OUT_DIR)/$@ $(OUT_DIR)/crypt.o $(OUT_DIR)/cryptTest.o $(LDFLAGS)
 
 
 #
