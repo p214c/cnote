@@ -64,11 +64,11 @@ crypt.o: $(SRC_DIR)/crypt.cc
 	$(MKDIR_P) $(OUT_DIR)
 	$(PNACL_CXX) -c -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS)
 
-cnote_encrypt.bc: $(SRC_DIR)/cnote_encrypt.cc crypt.o 
-	$(PNACL_CXX) -o $(OUT_DIR)/$@ $< $(OUT_DIR)/crypt.o -O2 $(CXXFLAGS) $(LDFLAGS)
+cnote_encrypt.bc: $(SRC_DIR)/cnote_encrypt.cc $(SRC_DIR)/crypt.cc 
+	$(PNACL_CXX) -o $(OUT_DIR)/$@ $^ -O2 $(CXXFLAGS) $(LDFLAGS)
 
 cnote_encrypt.pexe: cnote_encrypt.bc
-	$(PNACL_FINALIZE) -o $(OUT_DIR)/$@ $(OUT_DIR)/$< $(OUT_DIR)/crypt.o
+	$(PNACL_FINALIZE) -o $(OUT_DIR)/$@ $(OUT_DIR)/$<
 
 cryptTest.o: $(TST_DIR)/cryptTest.cc
 	$(PNACL_CXX) -c -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS)
