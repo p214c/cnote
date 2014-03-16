@@ -39,6 +39,11 @@ define([ 'lodash', 'jquery' ], function() {
     // simply displays the content of the message in an alert panel.
     function handleMessage(event) {
       var data = event.data || "";
+      if (data.indexOf('ERROR: ') == 0 || data.indexOf('INFO: ') == 0) {
+        console.log(data);
+        return;
+      }
+
       var response = data.split('||||');
       if (response.length < 2) {
         console.log('error parsing id and encrypted value from encrypt plugin response');
