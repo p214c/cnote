@@ -1,35 +1,37 @@
 #include "../../main/include/crypt.h"
 
-
 using namespace crypto;
 
 int main() {
-  std::cout << "Starting";
+	std::cout << "Starting";
 
-  crypto::Crypt* cipher = new crypto::Crypt();
+	crypto::Crypt* cipher = new crypto::Crypt();
 
-  std::string ENCRYPT_PREFIX = "\nencrypted||||";
+	std::string ENCRYPT_PREFIX = "\nencrypted||||";
 
-  std::string message = "encrypt this!";
-  std::cout << "\nBefore encrypt: " + message;
-  message = "encrypted||||" + cipher->encrypt(message);
-  std::cout << "\nEncrypted: " + message;
+	std::string messages[] = { "encrypt this!", "3||||test", "", NULL };
 
-  if (message.find(ENCRYPT_PREFIX) > 0) {
-    std::cout << "\nBefore decrypt: " + message;
-    message = cipher->decrypt(
-        message.substr(
-            message.find(ENCRYPT_PREFIX) + ENCRYPT_PREFIX.size()));
-    std::cout << "\nDecrypted: " + message;
-  } else {
-    std::cout << "\nDidn't detect encryption: " + message;
-    delete cipher;
-    return 1;
-  }
+	for (int idx = 0; idx < 4; idx++) {
+		std::string message = messages[idx];
+		std::cout << "\nBefore encrypt: " + message;
+		message = "encrypted||||" + cipher->encrypt(message);
+		std::cout << "\nEncrypted: " + message;
 
-  std::cout << "\nExiting\n";
-  delete cipher;
+		if (message.find(ENCRYPT_PREFIX) > 0) {
+			std::cout << "\nBefore decrypt: " + message;
+			message = cipher->decrypt(
+					message.substr(
+							message.find(ENCRYPT_PREFIX)
+									+ ENCRYPT_PREFIX.size()));
+			std::cout << "\nDecrypted: " + message;
+		} else {
+			std::cout << "\nDidn't detect encryption: " + message;
+		}
 
-  return 0;
+		std::cout << "\nNext\n";
+		delete cipher;
+	}
+
+	return 0;
 }
 

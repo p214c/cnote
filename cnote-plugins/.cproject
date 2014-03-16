@@ -199,10 +199,10 @@
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
 			</target>
-			<target name="crypt" path="encrypt-chrome" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="crypto" path="encrypt-chrome" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments>CONFIGURATION=${CONFIGURATION}</buildArguments>
-				<buildTarget>crypt</buildTarget>
+				<buildTarget>crypto</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
