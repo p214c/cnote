@@ -61,63 +61,72 @@ public:
 	/// Array or Dictionary. Please see the pp:Var documentation for more details.
 	/// @param[in] var_message The message posted by the browser.
 	virtual void HandleMessage(const pp::Var& var_message) {
+		PostMessage(pp::Var("INFO: handle message."));
 
 		if (!var_message.is_string()) {
 			PostMessage(pp::Var("ERROR: unsupported message type received."));
 			return;
 		}
 
-		string message = var_message.AsString();
-
 		try {
 			PostMessage(pp::Var("INFO: creating cipher."));
 			Crypt* cipher = new Crypt();
+			PostMessage(pp::Var("INFO: created cipher."));
 
 			if (cipher == NULL) {
 				PostMessage(pp::Var("ERROR: failed to instantiate cipher!"));
-				return;
-			}
-
-			if (message.empty()) {
-				PostMessage(pp::Var("INFO: detected empty message."));
 			} else {
-
-				int prefixPos = message.find_first_of(ENCRYPT_PREFIX);
-				if (prefixPos == 0) {
-					PostMessage(pp::Var("INFO: decrypting message " + message));
-					int prefixLen = message.find_first_of(ENCRYPT_PREFIX)
-							+ ENCRYPT_PREFIX_LEN;
-					message = cipher->decrypt(message.substr(prefixLen));
-					PostMessage(pp::Var("INFO: decrypted message " + message));
+				string message(var_message.AsString());
+				if (message.empty()) {
+					PostMessage(pp::Var("INFO: detected empty message."));
 				} else {
-					PostMessage(pp::Var("INFO: encrypting message " + message));
-					message = ENCRYPT_PREFIX + cipher->encrypt(message);
-					PostMessage(pp::Var("INFO: encrypted message " + message));
+					int prefixPos = message.find_first_of(ENCRYPT_PREFIX);
+					if (prefixPos == 0) {
+						PostMessage(
+								pp::Var("INFO: decrypting message " + message));
+						int prefixLen = message.find_first_of(ENCRYPT_PREFIX)
+								+ ENCRYPT_PREFIX_LEN;
+						string decrypted = cipher->decrypt(
+								message.substr(prefixLen));
+						string info = "INFO: decrypted message " + decrypted;
+						PostMessage(pp::Var(info));
+						message = decrypted;
+					} else {
+						PostMessage(
+								pp::Var("INFO: encrypting message " + message));
+						string encrypted = ENCRYPT_PREFIX
+								+ cipher->encrypt(message);
+						PostMessage(pp::Var("INFO: encrypted message."));
+						string info("INFO: encrypted message " + encrypted);
+						PostMessage(pp::Var(info));
+						message = encrypted;
+					}
+
+					if (cipher) {
+						PostMessage(pp::Var("INFO: destroying cipher."));
+						delete cipher;
+						cipher = NULL;
+						PostMessage(pp::Var("INFO: destroyed cipher."));
+					}
 				}
 
-				if (cipher) {
-					PostMessage(pp::Var("INFO: destroying cipher."));
-					delete cipher;
-				}
+				string info("INFO: replying with message " + message);
+				PostMessage(pp::Var(info));
+				PostMessage(pp::Var(message));
 			}
 		} catch (const std::exception& ex) {
 			string msg = "ERROR: exception occurred ";
 			msg += ex.what();
 			PostMessage(pp::Var(msg));
-			return;
 		} catch (const std::string& ex) {
 			string msg = "ERROR: exception occurred ";
 			msg += ex;
 			PostMessage(pp::Var(msg));
-			return;
 		} catch (...) {
 			PostMessage(pp::Var("ERROR: unknown error occurred."));
-			return;
 		}
 
-		PostMessage(pp::Var("INFO: replying with message " + message));
-		pp::Var var_reply = pp::Var(message);
-		PostMessage(var_reply);
+		PostMessage(pp::Var("INFO: handled message."));
 	}
 };
 
