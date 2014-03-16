@@ -41,9 +41,13 @@ int main() {
 			std::cout << "Didn't detect encryption: " + message << std::endl;
 		}
 
-		std::cout << "Next" << std::endl;
-		delete cipher;
-		cipher = NULL;
+		if (cipher) {
+			std::cout << "destroying cipher" << std::endl;
+			delete cipher;
+			cipher = NULL;
+		}
+
+		std::cout << "Next" << std::endl << std::endl;
 	}
 
 	return 0;
