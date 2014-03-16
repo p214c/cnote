@@ -29,6 +29,9 @@
 #include "ppapi/cpp/var.h"
 #include "../include/crypt.h"
 
+using namespace std;
+using namespace crypto;
+
 /// The Instance class.  One of these exists for each instance of your NaCl
 /// module on the web page.  The browser will ask the Module object to create
 /// a new Instance for each occurrence of the <embed> tag that has these
@@ -61,13 +64,21 @@ public:
 		}
 
 		// TODO create a header that includes these member declarations and instantiate once
-		crypt::Crypt* cipher = new crypt::Crypt();
-		std::string ENCRYPT_PREFIX = "encrypted||||";
-		std::string message = var_message.AsString();
+		Crypt* cipher = new Crypt();
+		string ENCRYPT_PREFIX = "encrypted||||";
+		string message = var_message.AsString();
+
 		if (message.find(ENCRYPT_PREFIX) > 0) {
-			message = cipher->decrypt(message.substr(message.find(ENCRYPT_PREFIX) + ENCRYPT_PREFIX.size()));
+			message = cipher->decrypt(
+					message.substr(
+							message.find(ENCRYPT_PREFIX)
+									+ ENCRYPT_PREFIX.size()));
 		} else {
 			message = "encrypted||||" + cipher->encrypt(message);
+		}
+
+		if (cipher) {
+			delete cipher;
 		}
 
 		pp::Var var_reply = pp::Var(message);
