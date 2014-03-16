@@ -55,27 +55,29 @@ all: OUT_DIR:=$(OUT_DIR)/$(CONFIGURATION)
 all: crypt.o cnote_encrypt.pexe
 
 crypt: OUT_DIR:=$(OUT_DIR)/$(CONFIGURATION)
-crypt: crypt.o crypt.exe
-
+crypt: PNACL_CXX := g++
+crypt: CXXFLAGS := -I$(INC_PATH) -I$(CRYPTOPP_ROOT)
+crypt: LDFLAGS := -L$(LIB_PATH) -lgnucryptopp 
+crypt: crypt.exe
 
 clean:
 	$(RM) -rf crypt.o cnote_encrypt.bc cnote_encrypt.pexe $(abspath ./target/*)
 
 crypt.o: $(SRC_DIR)/crypt.cc
 	$(MKDIR_P) $(OUT_DIR)
-	$(PNACL_CXX) -c -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS) $(LDFLAGS)
+	$(PNACL_CXX) -c -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS)
 
-crypt.exe : $(SRC_DIR)/crypt.cc
+cnote_encrypt.bc: crypt.o
 	$(MKDIR_P) $(OUT_DIR)
-	gcc -o $(OUT_DIR)/$@ $< -O2 -I$(INC_PATH) -I$(CRYPTOPP_ROOT) -L$(LIB_PATH) -lgnucryptopp 
-
-cnote_encrypt.bc: $(SRC_DIR)/cnote_encrypt.cc
-	$(MKDIR_P) $(OUT_DIR)
-	$(PNACL_CXX) -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS) $(OUT_DIR)/crypt.o $(LDFLAGS)
+	$(PNACL_CXX) -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS) $(LDFLAGS)
 
 cnote_encrypt.pexe: cnote_encrypt.bc
 	$(MKDIR_P) $(OUT_DIR)
 	$(PNACL_FINALIZE) -o $(OUT_DIR)/$@ $(OUT_DIR)/$<
+
+crypt.exe: crypt.o
+	$(MKDIR_P) $(OUT_DIR)
+	$(PNACL_CXX) -o $(OUT_DIR)/$@ $(OUT_DIR)/$< $(LDFLAGS)
 
 
 #
@@ -86,3 +88,4 @@ HTTPD_PY := python $(NACL_SDK_ROOT)/tools/httpd.py
 .PHONY: serve
 serve: all
 	$(HTTPD_PY) -C $(CURDIR)
+	
