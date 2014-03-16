@@ -64,21 +64,40 @@ public:
 		}
 
 		// TODO create a header that includes these member declarations and instantiate once
-		Crypt* cipher = new Crypt();
-		string ENCRYPT_PREFIX = "encrypted||||";
+		PostMessage(pp::Var("INFO: creating cipher."));
 		string message = var_message.AsString();
+		try {
+			Crypt* cipher = new Crypt();
 
-		if (message.find(ENCRYPT_PREFIX) > 0) {
-			message = cipher->decrypt(
-					message.substr(
-							message.find(ENCRYPT_PREFIX)
-									+ ENCRYPT_PREFIX.size()));
-		} else {
-			message = "encrypted||||" + cipher->encrypt(message);
-		}
+			string ENCRYPT_PREFIX = "encrypted||||";
+			if (message.find(ENCRYPT_PREFIX) > 0) {
+				PostMessage(pp::Var("INFO: decrypting message."));
+				message = cipher->decrypt(
+						message.substr(
+								message.find(ENCRYPT_PREFIX)
+										+ ENCRYPT_PREFIX.size()));
+			} else {
+				PostMessage(pp::Var("INFO: encrypting message."));
+				message = "encrypted||||" + cipher->encrypt(message);
+			}
 
-		if (cipher) {
-			delete cipher;
+			if (cipher) {
+				PostMessage(pp::Var("INFO: destroying cipher."));
+				delete cipher;
+			}
+		} catch (const std::exception& ex) {
+			string msg = "ERROR: exception occurred ";
+			msg += ex.what();
+			PostMessage(pp::Var(msg));
+			return;
+		} catch (const std::string& ex) {
+			string msg = "ERROR: exception occurred ";
+			msg += ex;
+			PostMessage(pp::Var(msg));
+			return;
+		} catch (...) {
+			PostMessage(pp::Var("ERROR: unknown error occurred."));
+			return;
 		}
 
 		pp::Var var_reply = pp::Var(message);
