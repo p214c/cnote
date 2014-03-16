@@ -1,58 +1,78 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="0.812947812">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.812947812" moduleId="org.eclipse.cdt.core.settings" name="Default">
+		<cconfiguration id="cdt.managedbuild.config.gnu.cross.exe.debug.1599458428">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.exe.debug.1599458428" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<macros>
+					<stringMacro name="PNACL_TC_PATH" type="VALUE_PATH_DIR" value="/home/pcesario/Tools/nacl_sdk/pepper_32/toolchain/linux_pnacl"/>
+					<stringMacro name="NACL_SDK_ROOT" type="VALUE_PATH_DIR" value="/home/pcesario/Tools/nacl_sdk/pepper_32"/>
+					<stringMacro name="CONFIGURATION" type="VALUE_TEXT" value="Debug"/>
+				</macros>
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="encrypt-chrome" buildProperties="" description="" id="0.812947812" name="Default" parent="org.eclipse.cdt.build.core.prefbase.cfg">
-					<folderInfo id="0.812947812." name="/" resourcePath="">
-						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.2029393752" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
-							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.2029393752.789737103" name=""/>
-							<builder id="org.eclipse.cdt.build.core.settings.default.builder.1367684266" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
-							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1049799044" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs">
-								<option id="org.eclipse.cdt.build.core.settings.holder.libfiles.93294353" name="Library Files" superClass="org.eclipse.cdt.build.core.settings.holder.libfiles" valueType="libFiles">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release/libgmock.a"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release/libgtest.a"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release/libjsoncpp.a"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release/libnacl_io.a"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release/libppapi_cpp.a"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release/libppapi_cpp_private.a"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release/libppapi_gles2.a"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release/libppapi_simple.a"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release/libsdk_util.a"/>
-								</option>
-								<option id="org.eclipse.cdt.build.core.settings.holder.libpaths.388115304" name="Library Paths" superClass="org.eclipse.cdt.build.core.settings.holder.libpaths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/encrypt-chrome/lib}&quot;"/>
-								</option>
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cross.exe.debug.1599458428" name="Debug" parent="cdt.managedbuild.config.gnu.cross.exe.debug">
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1599458428." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.1015249443" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1357794741" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
+							<builder arguments="CONFIGURATION=${CONFIGURATION}" autoBuildTarget="crypto" buildPath="${workspace_loc:/encrypt-chrome}" cleanBuildTarget="clean" command="make" enableAutoBuild="true" enableCleanBuild="true" enabledIncrementalBuild="true" id="cdt.managedbuild.builder.gnu.cross.227546615" incrementalBuildTarget="crypto" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="false" superClass="cdt.managedbuild.builder.gnu.cross">
+								<outputEntries>
+									<entry flags="VALUE_WORKSPACE_PATH" kind="outputPath" name="target"/>
+								</outputEntries>
+							</builder>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1581109794" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
+								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1896114528" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.debugging.level.1311948125" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1316852061" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
-							<tool id="org.eclipse.cdt.build.core.settings.holder.1041115668" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
-								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.121999790" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths"/>
-								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.359212437" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
-							</tool>
-							<tool id="org.eclipse.cdt.build.core.settings.holder.772580923" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
-								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.456536093" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.208464046" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
+								<option id="gnu.cpp.compiler.option.optimization.level.1879853434" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.debugging.level.746677631" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.include.paths.369401722" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/home/pcesario/Tools/nacl_sdk/pepper_32/toolchain/linux_x86_glibc/x86_64-nacl/include"/>
 									<listOptionValue builtIn="false" value="/home/pcesario/Tools/nacl_sdk/pepper_32/include"/>
-									<listOptionValue builtIn="false" value="/home/pcesario/git/cnote/cnote-plugins/cryptopp"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6.3/include"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6.3/include-fixed"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6.3/include-fixed/linux"/>
-									<listOptionValue builtIn="false" value="/usr/include/c++/4.6.3"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/encrypt-chrome/src/main/include}&quot;"/>
 								</option>
-								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.38997723" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1110177762" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
-							<tool id="org.eclipse.cdt.build.core.settings.holder.1777232288" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
-								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1161252023" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.731866429" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1425990572" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.150841023" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.60568574" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.525877934" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1611334590" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1599458428.1086410753" name="/" resourcePath="./">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.1865207668" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.719377199" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1581109794">
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1196384074" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.941071993" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.208464046">
+								<option id="gnu.cpp.compiler.option.include.paths.755781941" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/home/pcesario/Tools/nacl_sdk/pepper_32/include"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1823191878" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.697734537" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.731866429"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1278949067" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1425990572"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.81655194" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.60568574"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1089742360" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.525877934">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.960401773" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
@@ -60,21 +80,129 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
+		<cconfiguration id="cdt.managedbuild.config.gnu.cross.exe.release.1180795784">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.exe.release.1180795784" moduleId="org.eclipse.cdt.core.settings" name="Release">
+				<macros>
+					<stringMacro name="PNACL_TC_PATH" type="VALUE_PATH_DIR" value="/home/pcesario/Tools/nacl_sdk/pepper_32/toolchain/linux_pnacl"/>
+					<stringMacro name="NACL_SDK_ROOT" type="VALUE_PATH_DIR" value="/home/pcesario/Tools/nacl_sdk/pepper_32"/>
+					<stringMacro name="CONFIGURATION" type="VALUE_TEXT" value="Release"/>
+				</macros>
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cross.exe.release.1180795784" name="Release" parent="cdt.managedbuild.config.gnu.cross.exe.release">
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.release.1180795784." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.release.1778187882" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.release">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.436570664" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
+							<builder arguments="CONFIGURATION=${CONFIGURATION}" buildPath="${workspace_loc}" command="make" id="cdt.managedbuild.builder.gnu.cross.888855855" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="false" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1282397461" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
+								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.option.optimization.level.1596345413" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.debugging.level.913229214" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1326702479" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1286556965" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
+								<option id="gnu.cpp.compiler.option.optimization.level.1047752354" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.debugging.level.330127818" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.include.paths.152069089" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/home/pcesario/Tools/nacl_sdk/pepper_32/toolchain/linux_x86_glibc/x86_64-nacl/include"/>
+									<listOptionValue builtIn="false" value="/home/pcesario/Tools/nacl_sdk/pepper_32/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/encrypt-chrome/src/main/include}&quot;"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.550519898" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.910732569" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1252173646" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.978929379" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1808891637" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1695269030" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.267456544" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.release.1180795784.1298517182" name="/" resourcePath="./">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.release.1529029992" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.release" unusedChildren="">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1051700654" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1282397461">
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.510708992" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.375616192" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1286556965">
+								<option id="gnu.cpp.compiler.option.include.paths.1205992099" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/home/pcesario/Tools/nacl_sdk/pepper_32/lib/pnacl/Release"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/include}&quot;"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.369415629" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1747739099" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.910732569"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1729739323" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1252173646"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1153196498" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.1808891637"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.351671026" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.1695269030">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1804831465" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry excluding="src/test/cpp|src/main/cpp|src/main/include|src/test/include" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/main/cpp"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/main/include"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/test/cpp"/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="encrypt-chrome.null.1669718579" name="encrypt-chrome"/>
-	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="0.812947812">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
+		<project id="encrypt-chrome.cdt.managedbuild.target.gnu.cross.exe.1467389679" name="Executable" projectType="cdt.managedbuild.target.gnu.cross.exe"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="Default">
-			<resource resourceType="PROJECT" workspacePath="/encrypt-chrome"/>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/cnote-plugins"/>
+		</configuration>
+		<configuration configurationName="Multiple configurations">
+			<resource resourceType="PROJECT" workspacePath="/cnote-plugins"/>
+		</configuration>
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/cnote-plugins"/>
 		</configuration>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="all" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments>CONFIGURATION=${CONFIGURATION}</buildArguments>
+				<buildTarget>all</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1599458428;cdt.managedbuild.config.gnu.cross.exe.debug.1599458428.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.208464046;cdt.managedbuild.tool.gnu.cpp.compiler.input.1110177762">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1599458428;cdt.managedbuild.config.gnu.cross.exe.debug.1599458428.;cdt.managedbuild.tool.gnu.cross.c.compiler.1581109794;cdt.managedbuild.tool.gnu.c.compiler.input.1316852061">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.1180795784;cdt.managedbuild.config.gnu.cross.exe.release.1180795784.;cdt.managedbuild.tool.gnu.cross.c.compiler.1282397461;cdt.managedbuild.tool.gnu.c.compiler.input.1326702479">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.1180795784;cdt.managedbuild.config.gnu.cross.exe.release.1180795784.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.1286556965;cdt.managedbuild.tool.gnu.cpp.compiler.input.550519898">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+		</scannerConfigBuildInfo>
+	</storageModule>
 </cproject>
