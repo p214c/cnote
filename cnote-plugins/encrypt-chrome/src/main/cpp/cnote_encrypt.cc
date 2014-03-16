@@ -32,6 +32,10 @@
 using namespace std;
 using namespace crypto;
 
+// Globals
+string ENCRYPT_PREFIX = "encrypted||||";
+int ENCRYPT_PREFIX_LEN = ENCRYPT_PREFIX.size();
+
 /// The Instance class.  One of these exists for each instance of your NaCl
 /// module on the web page.  The browser will ask the Module object to create
 /// a new Instance for each occurrence of the <embed> tag that has these
@@ -63,27 +67,38 @@ public:
 			return;
 		}
 
-		// TODO create a header that includes these member declarations and instantiate once
-		PostMessage(pp::Var("INFO: creating cipher."));
 		string message = var_message.AsString();
+
 		try {
+			PostMessage(pp::Var("INFO: creating cipher."));
 			Crypt* cipher = new Crypt();
 
-			string ENCRYPT_PREFIX = "encrypted||||";
-			if (message.find(ENCRYPT_PREFIX) > 0) {
-				PostMessage(pp::Var("INFO: decrypting message."));
-				message = cipher->decrypt(
-						message.substr(
-								message.find(ENCRYPT_PREFIX)
-										+ ENCRYPT_PREFIX.size()));
-			} else {
-				PostMessage(pp::Var("INFO: encrypting message."));
-				message = "encrypted||||" + cipher->encrypt(message);
+			if (cipher == NULL) {
+				PostMessage(pp::Var("ERROR: failed to instantiate cipher!"));
+				return;
 			}
 
-			if (cipher) {
-				PostMessage(pp::Var("INFO: destroying cipher."));
-				delete cipher;
+			if (message.empty()) {
+				PostMessage(pp::Var("INFO: detected empty message."));
+			} else {
+
+				int prefixPos = message.find_first_of(ENCRYPT_PREFIX);
+				if (prefixPos == 0) {
+					PostMessage(pp::Var("INFO: decrypting message " + message));
+					int prefixLen = message.find_first_of(ENCRYPT_PREFIX)
+							+ ENCRYPT_PREFIX_LEN;
+					message = cipher->decrypt(message.substr(prefixLen));
+					PostMessage(pp::Var("INFO: decrypted message " + message));
+				} else {
+					PostMessage(pp::Var("INFO: encrypting message " + message));
+					message = ENCRYPT_PREFIX + cipher->encrypt(message);
+					PostMessage(pp::Var("INFO: encrypted message " + message));
+				}
+
+				if (cipher) {
+					PostMessage(pp::Var("INFO: destroying cipher."));
+					delete cipher;
+				}
 			}
 		} catch (const std::exception& ex) {
 			string msg = "ERROR: exception occurred ";
@@ -100,6 +115,7 @@ public:
 			return;
 		}
 
+		PostMessage(pp::Var("INFO: replying with message " + message));
 		pp::Var var_reply = pp::Var(message);
 		PostMessage(var_reply);
 	}
@@ -116,9 +132,9 @@ public:
 	virtual ~CnoteEncryptModule() {
 	}
 
-	/// Create and return a CnoteEncryptInstance object.
-	/// @param[in] instance The browser-side instance.
-	/// @return the plugin-side instance.
+/// Create and return a CnoteEncryptInstance object.
+/// @param[in] instance The browser-side instance.
+/// @return the plugin-side instance.
 	virtual pp::Instance* CreateInstance(PP_Instance instance) {
 		return new CnoteEncryptInstance(instance);
 	}

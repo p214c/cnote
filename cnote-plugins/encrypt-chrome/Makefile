@@ -21,6 +21,7 @@ LIB_PATH ?= $(abspath $(dir $(THIS_MAKEFILE))/lib)
 INC_PATH ?= $(abspath $(dir $(THIS_MAKEFILE))/include)
 
 # Project Build flags
+# Add in -Werror to warnings to fail build if warnings detected
 WARNINGS := -Wno-long-long -Wall -Wswitch-enum -pedantic
 CXXFLAGS := -pthread -std=gnu++98 $(WARNINGS)
 

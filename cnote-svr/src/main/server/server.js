@@ -41,7 +41,8 @@ app.use(express.favicon('public/favicon.ico'));
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.session({
-  secret : 'CNOTESESSION'
+  secret : 'CNOTESESSION',
+  cookie: { maxAge : 3600000 } // 1 Hour
 }));
 security.init(app);
 
