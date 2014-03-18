@@ -58,7 +58,11 @@ crypto: LDFLAGS := -L$(LIB_PATH) -lgnucryptopp
 crypto: crypt.exe
 
 clean:
-	$(RM) -rf crypt.o cnote_encrypt.bc cnote_encrypt.pexe $(abspath ./target/*)
+	$(RM) -rf base64.o crypt.o cnote_encrypt.bc cnote_encrypt.pexe $(abspath ./target/*)
+
+base64.o: $(SRC_DIR)/base64.cc
+	$(MKDIR_P) $(OUT_DIR)
+	$(PNACL_CXX) -c -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS)
 
 crypt.o: $(SRC_DIR)/crypt.cc
 	$(MKDIR_P) $(OUT_DIR)
@@ -66,7 +70,7 @@ crypt.o: $(SRC_DIR)/crypt.cc
 
 cnote_encrypt.bc:
 	$(MKDIR_P) $(OUT_DIR)
-	$(PNACL_CXX) -o $(OUT_DIR)/$@ $(SRC_DIR)/crypt.cc $(SRC_DIR)/cnote_encrypt.cc -O2 $(CXXFLAGS) $(LDFLAGS)
+	$(PNACL_CXX) -o $(OUT_DIR)/$@ $(SRC_DIR)/base64.cc $(SRC_DIR)/crypt.cc $(SRC_DIR)/cnote_encrypt.cc -O2 $(CXXFLAGS) $(LDFLAGS)
 
 cnote_encrypt.pexe: cnote_encrypt.bc
 	$(PNACL_FINALIZE) -o $(OUT_DIR)/$@ $(OUT_DIR)/$<
@@ -74,8 +78,8 @@ cnote_encrypt.pexe: cnote_encrypt.bc
 cryptTest.o: $(TST_DIR)/cryptTest.cc
 	$(PNACL_CXX) -c -o $(OUT_DIR)/$@ $< -O2 $(CXXFLAGS)
 
-crypt.exe: crypt.o cryptTest.o 
-	$(PNACL_CXX) -o $(OUT_DIR)/$@ $(OUT_DIR)/crypt.o $(OUT_DIR)/cryptTest.o $(LDFLAGS)
+crypt.exe: base64.o crypt.o cryptTest.o 
+	$(PNACL_CXX) -o $(OUT_DIR)/$@ $(OUT_DIR)/base64.o $(OUT_DIR)/crypt.o $(OUT_DIR)/cryptTest.o $(LDFLAGS)
 
 
 #

@@ -3,6 +3,7 @@
 #ifndef CRYPT_IMPORTS
 
 #include "../include/crypt.h"
+#include "../include/base64.h"
 
 using namespace std;
 using namespace CryptoPP;
@@ -14,16 +15,16 @@ string Crypt::encrypt(string encipher) {
 	//
 	string enciphered;
 
-	AES::Encryption aesEncryption(key,
-			AES::DEFAULT_KEYLENGTH);
-	CBC_Mode_ExternalCipher::Encryption cbcEncryption(aesEncryption,
-			iv);
+	AES::Encryption aesEncryption(key, AES::DEFAULT_KEYLENGTH);
+	CBC_Mode_ExternalCipher::Encryption cbcEncryption(aesEncryption, iv);
 
 	StreamTransformationFilter stfEncryptor(cbcEncryption,
 			new StringSink(enciphered));
 	stfEncryptor.Put(reinterpret_cast<const unsigned char*>(encipher.c_str()),
 			encipher.length() + 1);
 	stfEncryptor.MessageEnd();
+
+	enciphered = base64_encode(enciphered);
 
 	return enciphered;
 }
@@ -32,12 +33,12 @@ string Crypt::decrypt(string decipher) {
 	//
 	// Decipher Text
 	//
+	decipher = base64_decode(decipher);
+
 	string deciphered;
 
-	AES::Decryption aesDecryption(key,
-			AES::DEFAULT_KEYLENGTH);
-	CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption,
-			iv);
+	AES::Decryption aesDecryption(key, AES::DEFAULT_KEYLENGTH);
+	CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption, iv);
 
 	StreamTransformationFilter stfDecryptor(cbcDecryption,
 			new StringSink(deciphered));
