@@ -34,7 +34,7 @@ define([ 'models/Note', 'utils/Crypt', 'jquery' ], function(Note, Crypt) {
     }
     this.logout = logout;
 
-    function getNote(id, justIds, callbacks) {
+    function load(id, justIds, callbacks) {
       var type = 'GET';
       var url = '/notes' + (id ? '/' + id : '');
       if (justIds) {
@@ -49,7 +49,6 @@ define([ 'models/Note', 'utils/Crypt', 'jquery' ], function(Note, Crypt) {
         success : success
       }).fail(failure);
     }
-    this.getNote = getNote;
 
     function store(note, callbacks) {
       var type = note._id ? 'PUT' : 'POST';
@@ -88,6 +87,26 @@ define([ 'models/Note', 'utils/Crypt', 'jquery' ], function(Note, Crypt) {
       });
     }
     this.storeNote = storeNote;
+
+    function getNote(id, justIds, callbacks) {
+      if (justIds) {
+        load(id, justIds, callbacks);
+      } else {
+        // route ajax note returned through decrypt
+        load(id, justIds, {
+          failure : callbacks.failure,
+          success : function(note) {
+            Crypt.decrypt(note.data).then(function(value) {
+              note.data = value;
+              if (callbacks.success) {
+                callbacks.success(note);
+              }
+            });
+          }
+        });
+      }
+    }
+    this.getNote = getNote;
 
     function removeNote(view, callbacks) {
       var data = view.getData();

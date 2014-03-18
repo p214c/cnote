@@ -16,7 +16,7 @@ define([ 'lodash', 'jquery' ], function() {
       return cnoteCrypt;
     }
 
-    function encrypt(value) {
+    function endecrypt(value) {
       // set an id to key the message processing on return
       var deferred = $.Deferred();
       var msgId = _.uniqueId();
@@ -31,8 +31,20 @@ define([ 'lodash', 'jquery' ], function() {
 
       return deferred.promise();
     }
-    this.encrypt = encrypt;
-
+    this.encrypt = endecrypt;
+    
+    function decrypt(value) {
+      // check if decryption is needed
+      if (typeof value == 'undefined' || value.indexOf('encrypted||||') < 0) {
+        var deferred = $.Deferred();
+        deferred.resolve(value);
+        return deferred.promise();
+      }
+      
+      return endecrypt(value);
+    }
+    this.decrypt = decrypt;
+    
     // The 'message' event handler. This handler is fired when the NaCl module
     // posts a message to the browser by calling PPB_Messaging.PostMessage()
     // (in C) or pp::Instance.PostMessage() (in C++). This implementation
@@ -44,6 +56,13 @@ define([ 'lodash', 'jquery' ], function() {
         return;
       }
 
+      // expect encrypted response array to be
+      // [0] - message id
+      // [1] - "encrypted" token start
+      // [2] - encrypted data
+      // expect decrypted response array to be
+      // [0] - message id
+      // [1] - decrypted data
       var response = data.split('||||');
       if (response.length < 2) {
         console.log('error parsing id and encrypted value from encrypt plugin response');
@@ -51,10 +70,10 @@ define([ 'lodash', 'jquery' ], function() {
         var msgId = response[0];
         try {
           var entry = waiting[msgId];
-          if (entry) {
-            // TODO remove defaulting to original message. if encrypt failed, bail
-            var value = response[1] || entry.value;
-            entry.deferred.resolve(value);
+          if (entry && response.length == 3) {
+            entry.deferred.resolve(response[1] + "||||" + response[2]);
+          } else if (entry && response.length == 2) {
+            entry.deferred.resolve(response[1]);
           } else {
             console.log('error finding waiting request with id ' + msgId);
           }
