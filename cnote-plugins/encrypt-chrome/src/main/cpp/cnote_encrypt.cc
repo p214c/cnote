@@ -33,8 +33,8 @@ using namespace std;
 using namespace crypto;
 
 // Globals
-string ENCRYPT_PREFIX = "encrypted||||";
-int ENCRYPT_PREFIX_LEN = ENCRYPT_PREFIX.size();
+string MSG_SEPARATOR = "||||";
+string ENCRYPT_PREFIX = "encrypted" + MSG_SEPARATOR;
 
 /// The Instance class.  One of these exists for each instance of your NaCl
 /// module on the web page.  The browser will ask the Module object to create
@@ -76,43 +76,15 @@ public:
 			if (cipher == NULL) {
 				PostMessage(pp::Var("ERROR: failed to instantiate cipher!"));
 			} else {
-				string message(var_message.AsString());
-				if (message.empty()) {
-					PostMessage(pp::Var("INFO: detected empty message."));
-				} else {
-					int prefixPos = message.find_first_of(ENCRYPT_PREFIX);
-					if (prefixPos == 0) {
-						PostMessage(
-								pp::Var("INFO: decrypting message " + message));
-						int prefixLen = message.find_first_of(ENCRYPT_PREFIX)
-								+ ENCRYPT_PREFIX_LEN;
-						string decrypted = cipher->decrypt(
-								message.substr(prefixLen));
-						string info = "INFO: decrypted message " + decrypted;
-						PostMessage(pp::Var(info));
-						message = decrypted;
-					} else {
-						PostMessage(
-								pp::Var("INFO: encrypting message " + message));
-						string encrypted = ENCRYPT_PREFIX
-								+ cipher->encrypt(message);
-						PostMessage(pp::Var("INFO: encrypted message."));
-						string info("INFO: encrypted message " + encrypted);
-						PostMessage(pp::Var(info));
-						message = encrypted;
-					}
-
-					if (cipher) {
-						PostMessage(pp::Var("INFO: destroying cipher."));
-						delete cipher;
-						cipher = NULL;
-						PostMessage(pp::Var("INFO: destroyed cipher."));
-					}
-				}
-
+				string message = processMessage(cipher, var_message.AsString());
 				string info("INFO: replying with message " + message);
 				PostMessage(pp::Var(info));
 				PostMessage(pp::Var(message));
+
+				PostMessage(pp::Var("INFO: destroying cipher."));
+				delete cipher;
+				cipher = NULL;
+				PostMessage(pp::Var("INFO: destroyed cipher."));
 			}
 		} catch (const std::exception& ex) {
 			string msg = "ERROR: exception occurred ";
@@ -127,6 +99,75 @@ public:
 		}
 
 		PostMessage(pp::Var("INFO: handled message."));
+	}
+
+private:
+	string processMessage(Crypt* cipher, const string& message) {
+		PostMessage(pp::Var("INFO: processing message " + message));
+		if (message.empty()) {
+			PostMessage(pp::Var("INFO: detected empty message."));
+		} else {
+			string::size_type prefixPos = message.find(ENCRYPT_PREFIX);
+			if (prefixPos == string::npos) {
+				return encryptMessage(cipher, message);
+			} else {
+				return decryptMessage(cipher, message);
+			}
+		}
+		return "";
+	}
+
+	string encryptMessage(Crypt* cipher, const string& message) {
+		PostMessage(pp::Var("INFO: enciphering message " + message));
+
+		string::size_type msgIdx = message.find(MSG_SEPARATOR);
+
+		// preserve any leading text before message separator token
+		string prefix = "";
+		if (msgIdx == string::npos) {
+			msgIdx = 0;
+		} else {
+			prefix = message.substr(0, msgIdx + MSG_SEPARATOR.size());
+		}
+
+		string encrypted = prefix + ENCRYPT_PREFIX
+				+ cipher->encrypt(message.substr(prefix.size()));
+		string info("INFO: encrypted message " + encrypted);
+		PostMessage(pp::Var(info));
+
+		return encrypted;
+	}
+
+	string decryptMessage(Crypt* cipher, const string& message) {
+		PostMessage(pp::Var("INFO: deciphering message " + message));
+
+		string::size_type encryptIdx = message.find(ENCRYPT_PREFIX);
+
+		// preserve any leading text before encrypt id token
+		string prefix = "";
+		if (encryptIdx == string::npos) {
+			PostMessage(
+					pp::Var(
+							"INFO: did not detect encrypt prefix attempting to decrypt message"));
+			return message;
+		} else {
+			prefix = message.substr(0, encryptIdx);
+		}
+
+		try {
+			string decrypted = prefix
+					+ cipher->decrypt(
+							message.substr(encryptIdx + ENCRYPT_PREFIX.size()));
+			string info = "INFO: decrypted message " + decrypted;
+			PostMessage(pp::Var(info));
+
+			return decrypted;
+		} catch (const std::exception& ex) {
+			string msg = "ERROR: exception occurred ";
+			msg += ex.what();
+			PostMessage(pp::Var(msg));
+			return message;
+		}
 	}
 };
 

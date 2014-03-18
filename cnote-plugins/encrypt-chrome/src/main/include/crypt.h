@@ -5,10 +5,13 @@
 
 #include <iostream>
 #include <iomanip>
+#include <string>
 
 #include "modes.h"
 #include "aes.h"
 #include "filters.h"
+
+using namespace std;
 
 namespace crypto {
 
@@ -35,12 +38,12 @@ public:
 	// encrypt() returns the encrypted value for the supplied string
 	//
 	// @return The encrypted value
-	std::string encrypt(std::string encipher);
+	string encrypt(string encipher);
 
 	// decrypt() returns the decrypted value for the supplied cipher text
 	//
 	// @return The decrypted value
-	std::string decrypt(std::string decipher);
+	string decrypt(string decipher);
 
 };
 }  // namespace crypt

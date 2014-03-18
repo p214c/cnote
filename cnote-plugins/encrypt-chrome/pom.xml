@@ -78,7 +78,7 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>${project.build.directory}/${project.configuration}/${project.artifactId}.pexe</file>
+									<file>${project.build.directory}/${configuration}/${project.artifactId}.pexe</file>
 									<type>pexe</type>
 									<classifier>chrome</classifier>
 								</artifact>
