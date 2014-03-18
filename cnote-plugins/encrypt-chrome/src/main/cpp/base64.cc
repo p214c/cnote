@@ -1,3 +1,4 @@
+// http://www.cplusplus.com/forum/beginner/51572/
 #include "base64.h"
 
 static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
