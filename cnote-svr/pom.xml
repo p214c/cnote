@@ -31,6 +31,13 @@
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
+		<dependency>
+			<groupId>com.cp</groupId>
+			<artifactId>cnote_encrypt</artifactId>
+			<version>${project.version}</version>
+			<type>pexe</type>
+			<classifier>chrome</classifier>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -83,13 +90,13 @@
 						<configuration>
 							<target>
 								<echo message="========== installing node_modules ===================" />
-								<exec executable="cmd" dir="${project.build.directory}/nodejs/" os="Windows 8"
-									failonerror="true">
+								<exec executable="cmd" dir="${project.build.directory}/nodejs/"
+									os="Windows 8" failonerror="true">
 									<arg value="npm" />
 									<arg value="install" />
 								</exec>
-								<exec executable="npm" dir="${project.build.directory}/nodejs/" os="Linux"
-									failonerror="true">
+								<exec executable="npm" dir="${project.build.directory}/nodejs/"
+									os="Linux" failonerror="true">
 									<arg value="install" />
 								</exec>
 							</target>
@@ -117,7 +124,25 @@
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<useSubDirectoryPerArtifact>false</useSubDirectoryPerArtifact>
 							<includeGroupIds>com.cp</includeGroupIds>
+							<excludeArtifactIds>cnote_encrypt</excludeArtifactIds>
 							<stripVersion>true</stripVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy_plugins</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/nodejs/secure/cnote</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<useSubDirectoryPerArtifact>false</useSubDirectoryPerArtifact>
+							<includeGroupIds>com.cp</includeGroupIds>
+							<excludeArtifactIds>cnote-app</excludeArtifactIds>
+							<stripVersion>true</stripVersion>
+							<stripClassifier>true</stripClassifier>
 						</configuration>
 					</execution>
 				</executions>
