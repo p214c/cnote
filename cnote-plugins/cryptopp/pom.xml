@@ -9,13 +9,14 @@
 		<relativePath>../</relativePath>
 	</parent>
 
-	<artifactId>cnote_encrypt</artifactId>
+	<artifactId>libcryptopp</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
-		<configuration>Release</configuration>
-		<target>all</target>
-		<!-- <target>crypto</target> -->
+		<target>static</target>
+		<!-- <target>clean</target> -->
+		<!-- <target>all</target> -->
+		<!-- <target>dynamic</target> -->
 	</properties>
 
 	<dependencies>
@@ -55,9 +56,9 @@
 							<target name="make">
 								<taskdef resource="net/sf/antcontrib/antcontrib.properties"
 									classpathref="maven.plugin.classpath" />
+								<!-- executes make against the GNUmakefile in this directory -->
 								<exec executable="make" failonerror="true" dir="${project.basedir}">
 									<arg value="${target}" />
-									<arg value="CONFIGURATION=${configuration}" />
 								</exec>
 							</target>
 						</configuration>
@@ -78,8 +79,8 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>${project.build.directory}/${project.configuration}/${project.artifactId}.pexe</file>
-									<type>pexe</type>
+									<file>${project.basedir}/${project.artifactId}.a</file>
+									<type>a</type>
 									<classifier>chrome</classifier>
 								</artifact>
 							</artifacts>
