@@ -12,6 +12,11 @@
 	<artifactId>cnote_encrypt</artifactId>
 	<packaging>pom</packaging>
 
+	<properties>
+		<configuration>Release</configuration>
+		<target>all</target>
+	</properties>
+
 	<dependencies>
 	</dependencies>
 
@@ -49,7 +54,10 @@
 							<target name="make">
 								<taskdef resource="net/sf/antcontrib/antcontrib.properties"
 									classpathref="maven.plugin.classpath" />
-								<exec executable="make" failonerror="true" dir="${project.basedir}" />
+								<exec executable="make" failonerror="true" dir="${project.basedir}">
+									<arg value="${target}" />
+									<arg value="CONFIGURATION=${configuration}" />
+								</exec>
 							</target>
 						</configuration>
 					</execution>
@@ -69,7 +77,7 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>${project.build.directory}/Release/${project.artifactId}.pexe</file>
+									<file>${project.build.directory}/${project.configuration}/${project.artifactId}.pexe</file>
 									<type>pexe</type>
 									<classifier>chrome</classifier>
 								</artifact>
